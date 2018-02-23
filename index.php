@@ -70,21 +70,40 @@ require("code.php");
         	</li>
         	</ul>
         	<ul class="nav navbar-nav navbar-right">
-        	<li><a style="padding-top: 10px; padding-bottom: 10px" href="#"><!-- HotLog -->
-<span id="hotlog_counter"></span>
-<span id="hotlog_dyn"></span>
-<script type="text/javascript"> var hot_s = document.createElement('script');
-hot_s.type = 'text/javascript'; hot_s.async = true;
-hot_s.src = 'http://js.hotlog.ru/dcounter/2546330.js';
-hot_d = document.getElementById('hotlog_dyn');
-hot_d.appendChild(hot_s);
+        	<li><a style="padding-top: 10px; padding-bottom: 10px" href="#">
+			
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter47804353 = new Ya.Metrika({
+                    id:47804353,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    webvisor:true,
+                    trackHash:true
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
 </script>
-<noscript>
-<a href="http://click.hotlog.ru/?2546330" target="_blank">
-<img src="http://hit2.hotlog.ru/cgi-bin/hotlog/count?s=2546330&im=351" height="50px" width="50" border="0" 
-title="HotLog" alt="HotLog"></a>
-</noscript>
-<!-- /HotLog --></a></li>
+<noscript><div><img src="https://mc.yandex.ru/watch/47804353" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+			
+			</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       
@@ -170,7 +189,7 @@ title="HotLog" alt="HotLog"></a>
 	else{
     if((!isset($_COOKIE['id'])) or $vibr_grup) //Выбор группы
     {
-    	if($rez = $mysqli->query( "SELECT * FROM grups")){
+    	if($rez = $mysqli->query( "SELECT groups_original.`ID` as 'id_grup', timetable.`class` as 'name' FROM timetable LEFT JOIN groups_original ON timetable.`class` = groups_original.`Naimenovanie` GROUP BY timetable.`class` ORDER BY timetable.`class`")){
     ?>
     	<table width=100%">
 			<tr><td valign="center">

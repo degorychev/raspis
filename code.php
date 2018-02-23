@@ -164,40 +164,41 @@ else{
 	if(!((!isset($_COOKIE['id'])) or $vibr_grup)) //после Выбор группы
     {
 		$id_grup = htmlspecialchars($_COOKIE['id']);
-		if($rez = $mysqli->query("SELECT * FROM grups WHERE id_grup = $id_grup LIMIT 1")){
+		if($rez = $mysqli->query("SELECT Naimenovanie as 'name' FROM groups_original WHERE ID = $id_grup LIMIT 1")){
 			if(($rez->num_rows) == 1){
-		while($result = $rez->fetch_assoc()){
-			$name_grup = $result['name'];
-			$start_grup = $result['start'];
-			$time_start_par = explode(" ", $result['time-start-par']);
-			$pin = $result['pin'];
-		}
+				while($result = $rez->fetch_assoc()){
+				$name_grup = $result['name'];
+				//$start_grup = $result['start'];
+				//$time_start_par = explode(" ", $result['time-start-par']);
+				//$pin = $result['pin'];
+				}
 		$rez->free();
 		$week = (int)((date('z',(time()+60*60*3)) - date('z',$start_grup))/7)+1;
 		$day_num = date('w',(time()+60*60*3));
 		//$week = 13;
 		//$day_num = 2;
 		
-		if($_GET['page'] == 'add-par'){
-			if(isset($pin) and ($_COOKIE['pin'.$id_grup] == $pin)){
-				if(isset($_POST['name-par'], $_POST['type-par'], $_POST['num-par'], $_POST['day-par'], $_POST['aud-par'], $_POST['week-par'], $_POST['prepod-par']))
-				{
-				$name_par = htmlspecialchars($_POST['name-par']);
-				$type_par = htmlspecialchars($_POST['type-par']);
-				$num_par = htmlspecialchars($_POST['num-par']);
-				$day_par = htmlspecialchars($_POST['day-par']);
-				$week_par = htmlspecialchars($_POST['week-par']);
-				$aud_par = htmlspecialchars($_POST['aud-par']);
-				$prepod_par = htmlspecialchars($_POST['prepod-par']);
-				if($mysqli->query("INSERT INTO `raspis` (`id_grup`, `para`, `den`, `name`, `type`, `weeks`, `auditor`, `prepod`) VALUES ('$id_grup', '$num_par', '$day_par', '$name_par', '$type_par', '$week_par', '$aud_par', '$prepod_par')"))
-				$alert2 = '<div class="alert alert-success">Пара добавлена</div>';
-				else
-				$alert2 = '<div class="alert alert-danger">Ошибка добавления</div>';
-				}
-			}else
-			$alert2 = '<div class="alert alert-danger">Вам не доступно редактирование этой группы</div>';
-		} //------------------------------Добавление пары
-		elseif($_GET['page'] == 'allow-edit-par'){}
+		//if($_GET['page'] == 'add-par'){
+		//	if(isset($pin) and ($_COOKIE['pin'.$id_grup] == $pin)){
+		//		if(isset($_POST['name-par'], $_POST['type-par'], $_POST['num-par'], $_POST['day-par'], $_POST['aud-par'], $_POST['week-par'], $_POST['prepod-par']))
+		//		{
+		//		$name_par = htmlspecialchars($_POST['name-par']);
+		//		$type_par = htmlspecialchars($_POST['type-par']);
+		//		$num_par = htmlspecialchars($_POST['num-par']);
+		//		$day_par = htmlspecialchars($_POST['day-par']);
+		//		$week_par = htmlspecialchars($_POST['week-par']);
+		//		$aud_par = htmlspecialchars($_POST['aud-par']);
+		//		$prepod_par = htmlspecialchars($_POST['prepod-par']);
+		//		if($mysqli->query("INSERT INTO `raspis` (`id_grup`, `para`, `den`, `name`, `type`, `weeks`, `auditor`, `prepod`) VALUES ('$id_grup', '$num_par', '$day_par', '$name_par', '$type_par', '$week_par', '$aud_par', '$prepod_par')"))
+		//		$alert2 = '<div class="alert alert-success">Пара добавлена</div>';
+		//		else
+		//		$alert2 = '<div class="alert alert-danger">Ошибка добавления</div>';
+		//		}
+		//	}else
+		//	$alert2 = '<div class="alert alert-danger">Вам не доступно редактирование этой группы</div>';
+		//} //------------------------------Добавление пары
+		//else
+		if($_GET['page'] == 'allow-edit-par'){}
 		elseif($_GET['page'] == 'all-par'){}
 		else{
 			if(isset($_GET['day'])){
@@ -210,23 +211,28 @@ else{
 				$week_new = $week;
 				$day_num_new = $day_num;
 			}
-				if($rez = $mysqli->query("SELECT * FROM raspis WHERE id_grup = $id_grup AND den = $day_num_new ORDER BY `para` ASC")){
+			echo "$name_grup";
+				if($rez = $mysqli->query("SELECT * FROM timetable WHERE class = '$name_grup' ORDER BY `timeStart` ASC")){
 					if(($rez->num_rows)>0){
 						$num_par = 0;
 						while($result = $rez->fetch_assoc()){
-							$weeks = explode(", ", $result['weeks']);
-							foreach($weeks as $week1){
-								if($week1 == $week_new){
-									$num_par++;
-									$result['time'] = $result['time']=="" ? $time_start_par[$result['para']-1] : $result['time'];
-									$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['prepod']);
-									$list_par[$num_par] = '<tr class="para_num_'.$num_par.' bright bleft">
-									<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><b>'.$result['para'].'</b><br>'.$result['time'].'</td>
-									<td colspan="2">'.$result['name'].' <span class="label label-default">'.$result['type'].'</span></td></tr>
-									<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['auditor'].'</td><td>'.$prepod.'</td></tr>';
-									break;
-								}
-							}
+								$num_par++;
+								$result['time'] = $result['time']=="" ? $time_start_par[$result['para']-1] : $result['time'];
+								$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['teacher']);
+								$list_par[$num_par] = '<tr class="para_num_'.$num_par.' bright bleft">
+								<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><b>'.$result['para'].'</b><br>'.$result['timeStart'].'</td>
+								<td colspan="2">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span></td></tr>
+								<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$prepod.'</td></tr>';
+
+
+							//$weeks = explode(", ", $result['weeks']);
+							//foreach($weeks as $week1){
+							//	if($week1 == $week_new){
+							//		$num_par++;
+							//		
+							//		break;
+							//	}
+							//}
 						}
     				}else{
     					$num_par = 0;
