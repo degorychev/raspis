@@ -302,7 +302,17 @@ require("code.php");
 			if(isset($_GET['num'])){
 				$week_all = htmlspecialchars($_GET['num']);
 				$popravka = $week_all-$week;
-				$last_monday = strtotime($popravka." Monday");
+				if ($popravka==1)
+					$last_monday = strtotime("Next Monday");
+				elseif($popravka==0)
+					$last_monday = strtotime("last Monday");
+				elseif($popravka<0){
+					$popravka--;
+					$last_monday = strtotime($popravka." Monday");
+				}
+				else
+					$last_monday = strtotime($popravka." Monday");
+
 			}
 			else
 			{
