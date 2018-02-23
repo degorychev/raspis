@@ -299,10 +299,21 @@ require("code.php");
 		<?php		
 		} //-------------------Разрешение на редактирование
 		elseif($_GET['page'] == 'all-par'){
-			if(isset($_GET['num']))
-			$week_all = htmlspecialchars($_GET['num']);
+			if(isset($_GET['num'])){
+				$week_all = htmlspecialchars($_GET['num']);
+				$popravka = $week_all-$week;
+				$last_monday = strtotime($popravka." Monday");
+			}
 			else
-			$week_all = $week;
+			{
+				$week_all = $week;
+				$last_monday = strtotime("last Monday");	
+			}		
+			$work_data = date_create(); 
+			date_timestamp_set($work_data, $last_monday);
+
+			echo date_format($work_data, "d M Y");
+			date_modify($work_data, '-1 day');
 			?>
 			<div class="panel panel-info text-center"><div class="panel-heading"><h3 class="panel-title">Сейчас показана <b><?=$week_all?></b> неделя.</h3></div></div>
 			<ul class="pager">
@@ -323,23 +334,35 @@ require("code.php");
     		<h3 class="panel-title"><?=day($num_day)?></h3>
   		</div>
 			<?php
-				if($rez = $mysqli->query("SELECT * FROM raspis WHERE id_grup = $id_grup AND den = $num_day ORDER BY `para` ASC")){
+				date_modify($work_data, '+1 day');
+				$workday=date_format($work_data, "Y-m-d");
+				if($rez = $mysqli->query("SELECT * FROM timetable WHERE class = '$name_grup' AND `date`='$workday' ORDER BY `timeStart` ASC")){
+					//WHERE id_grup = $id_grup AND den = $num_day ORDER BY `para` ASC
 					if(($rez->num_rows)>0){
 						$num_par = 0;
 						while($result = $rez->fetch_assoc()){
-							$weeks = explode(", ", $result['weeks']);
-							foreach($weeks as $week1){
-								if($week1 == $week_all){
-									$num_par++;
-									$result['time'] = $result['time']=="" ? $time_start_par[$result['para']-1] : $result['time'];
-									$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['prepod']);
-									$list_par[$num_par] = '<tr class="bright bleft">
-									<td rowspan="2" style="border-bottom: 2px solid #000000;"><b>'.$result['para'].'</b><br>'.$result['time'].'</td>
-									<td colspan="2">'.$result['name'].' <span class="label label-default">'.$result['type'].'</span></td></tr>
-									<tr class="bbottom bright"><td style="word-wrap: break-word;">'.$result['auditor'].'</td><td>'.$prepod.'</td></tr>';
-									break;
-								}
-							}
+							$num_par++;
+							$result['time'] = $result['time']=="" ? $time_start_par[$result['para']-1] : $result['time'];
+							$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['teacher']);
+							$list_par[$num_par] = '<tr class="para_num_'.$num_par.' bright bleft">
+							<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><b>'.$result['para'].'</b><br>'.$result['timeStart'].'</td>
+							<td colspan="2">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span></td></tr>
+							<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$prepod.'</td></tr>';
+
+
+							//$weeks = explode(", ", $result['weeks']);
+							//foreach($weeks as $week1){
+							//	if($week1 == $week_all){
+							//		$num_par++;
+							//		$result['time'] = $result['time']=="" ? $time_start_par[$result['para']-1] : $result['time'];
+							//		$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['prepod']);
+							//		$list_par[$num_par] = '<tr class="bright bleft">
+							//		<td rowspan="2" style="border-bottom: 2px solid #000000;"><b>'.$result['para'].'</b><br>'.$result['time'].'</td>
+							//		<td colspan="2">'.$result['name'].' <span class="label label-default">'.$result['type'].'</span></td></tr>
+							//		<tr class="bbottom bright"><td style="word-wrap: break-word;">'.$result['auditor'].'</td><td>'.$prepod.'</td></tr>';
+							//		break;
+							//	}
+							//}
 						}
 						if($num_par > '0'){
 								/*
