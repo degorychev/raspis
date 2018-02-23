@@ -74,7 +74,10 @@ function day($num111){//--------------------------День недели букв
 			        break;
 			    case 6:
 			        $day111 = "Суббота";
-			        break;
+					break;
+				case 7:
+	        		$day111 = "Воскресенье";
+	        		break;
 			    }
 	return $day111;
 }//------------------------------------------------День недели буквами
@@ -168,13 +171,13 @@ else{
 			if(($rez->num_rows) == 1){
 				while($result = $rez->fetch_assoc()){
 				$name_grup = $result['name'];
-				//$start_grup = 1517439600;
+				$start_grup = 1517792461;
 				//$time_start_par = explode(" ", $result['time-start-par']);
 				//$pin = $result['pin'];
 				}
 		$rez->free();
-		$week = 3;
-		//$week = (int)((date('z',(time()+60*60*3)) - date('z',$start_grup))/7)+1;
+		//$week = 3;
+		$week = (int)((date('z',(time()+60*60*3)) - date('z',$start_grup))/7)+1;
 		$day_num = date('w',(time()+60*60*3));
 		$den = date("Y-m-d");
 		
@@ -222,8 +225,10 @@ else{
 								$num_par++;
 								$result['time'] = $result['time']=="" ? $time_start_par[$result['para']-1] : $result['time'];
 								$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['teacher']);
+								$nachalo=strtotime($result['timeStart']."+1 HOUR");
+								$konec=strtotime($result['timeStop']."+1 HOUR");
 								$list_par[$num_par] = '<tr class="para_num_'.$num_par.' bright bleft">
-								<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><b>'.$result['para'].'</b><br>'.$result['timeStart'].'</td>
+								<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><b>'.$result['para'].'</b><br>'.gmdate("H:i", $nachalo).'<br>'.gmdate("H:i", $konec).'</td>
 								<td colspan="2">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span></td></tr>
 								<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$prepod.'</td></tr>';
 

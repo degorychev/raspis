@@ -340,12 +340,19 @@ require("code.php");
 		?>
 		<div class="col-md-4 col-xs-12" >
 		<div <?=$co?> class="panel panel-default"><!--Вывод расписания на всю неделю-->
+		<?php
+			date_modify($work_data, '+1 day');
+			$workday=date_format($work_data, "Y-m-d");
+			$monthes = array(
+				1 => 'Января', 2 => 'Февраля', 3 => 'Марта', 4 => 'Апреля',
+				5 => 'Мая', 6 => 'Июня', 7 => 'Июля', 8 => 'Августа',
+				9 => 'Сентября', 10 => 'Октября', 11 => 'Ноября', 12 => 'Декабря'
+			);
+		?>
 		<div class="panel-heading">
-    		<h3 class="panel-title"><?=day($num_day)?></h3>
+    		<h3 class="panel-title"><?=day($num_day)." (".date('d ', strtotime($workday)).$monthes[(date('n', strtotime($workday)))],")" ?></h3>
   		</div>
 			<?php
-				date_modify($work_data, '+1 day');
-				$workday=date_format($work_data, "Y-m-d");
 				if($rez = $mysqli->query("SELECT * FROM timetable WHERE class = '$name_grup' AND `date`='$workday' ORDER BY `timeStart` ASC")){
 					//WHERE id_grup = $id_grup AND den = $num_day ORDER BY `para` ASC
 					if(($rez->num_rows)>0){
@@ -354,8 +361,10 @@ require("code.php");
 							$num_par++;
 							$result['time'] = $result['time']=="" ? $time_start_par[$result['para']-1] : $result['time'];
 							$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['teacher']);
+							$nachalo=strtotime($result['timeStart']."+1 HOUR");
+							$konec=strtotime($result['timeStop']."+1 HOUR");
 							$list_par[$num_par] = '<tr class="para_num_'.$num_par.' bright bleft">
-							<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><b>'.$result['para'].'</b><br>'.$result['timeStart'].'</td>
+							<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><b>'.$result['para'].'</b><br>'.gmdate("H:i", $nachalo).'<br>'.gmdate("H:i", $konec).'</td>
 							<td colspan="2">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span></td></tr>
 							<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$prepod.'</td></tr>';
 
@@ -400,7 +409,7 @@ require("code.php");
 					<table class="table table-bordered">
 						<thead>
 							<tr class="btop bleft bbottom bright">
-							<th class="text-center">№</th>
+							<th class="text-center">время</th>
 							<th class="text-center">ауд.</th>
 							<th class="text-center">Преподаватель</th>
 							</tr>
@@ -439,7 +448,7 @@ require("code.php");
 			<div class="alert alert-info">
 				<div class="row text-center">
 				<div class="col-md-4 col-xs-12"><h3 class="panel-title">Сейчас показана <b><?=$week_new?></b> неделя,</h3></div>
-				<div class="col-md-4 col-xs-6"><h3 class="panel-title"><b><?=day($day_num_new)?></b></h3></div>
+				<div class="col-md-4 col-xs-6"><h3 class="panel-title"><b><?=day(date("N", strtotime($den)))?></b></h3></div>
 				<div class="col-md-3 col-xs-6"><h3 class="panel-title">Число: <b><?=$data_11?></b></h3></div>
 				</div>
 			</div>
@@ -459,7 +468,7 @@ require("code.php");
 			<table class="table table-bordered">
 				<thead>
 					<tr class="btop bleft bbottom bright">
-						<th class="text-center">№</th>
+						<th class="text-center">время</th>
 						<th class="text-center">ауд.</th>
 						<th class="text-center">Преподаватель</th>
 					</tr>
