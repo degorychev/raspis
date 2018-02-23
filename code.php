@@ -168,13 +168,16 @@ else{
 			if(($rez->num_rows) == 1){
 				while($result = $rez->fetch_assoc()){
 				$name_grup = $result['name'];
-				//$start_grup = $result['start'];
+				//$start_grup = 1517439600;
 				//$time_start_par = explode(" ", $result['time-start-par']);
 				//$pin = $result['pin'];
 				}
 		$rez->free();
-		$week = (int)((date('z',(time()+60*60*3)) - date('z',$start_grup))/7)+1;
+		$week = 3;
+		//$week = (int)((date('z',(time()+60*60*3)) - date('z',$start_grup))/7)+1;
 		$day_num = date('w',(time()+60*60*3));
+		$den = date("Y-m-d");
+		
 		//$week = 13;
 		//$day_num = 2;
 		
@@ -204,15 +207,15 @@ else{
 			if(isset($_GET['day'])){
 				$day_11 = htmlspecialchars($_GET['day']);
 				$week_new = (int)((date('z',(strtotime('+'.$day_11.' day')+60*60*3)) - date('z',$start_grup))/7)+1;
-				$day_num_new = date('w',(strtotime('+'.$day_11.' day')+60*60*3));
+				$day_num_new = $den = date("Y-m-d", strtotime($day_11." DAY")); 
+				//date('w',(strtotime('+'.$day_11.' day')+60*60*3));
 				$data_11 = date("d.m",(strtotime('+'.$day_11.' day')+60*60*3));
 			}else{
 				$day_11 = 0;
 				$week_new = $week;
 				$day_num_new = $day_num;
 			}
-			echo "$name_grup";
-				if($rez = $mysqli->query("SELECT * FROM timetable WHERE class = '$name_grup' ORDER BY `timeStart` ASC")){
+				if($rez = $mysqli->query("SELECT * FROM timetable WHERE class = '$name_grup' AND `date`='$den' ORDER BY `timeStart` ASC")){
 					if(($rez->num_rows)>0){
 						$num_par = 0;
 						while($result = $rez->fetch_assoc()){
