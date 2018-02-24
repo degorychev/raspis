@@ -114,81 +114,8 @@ require("code.php");
 	<?php
 	if(isset($alert))
 			echo $alert;
-	if($_GET['page'] == 'add-grup'){
-	?>
-	<div class="page-header"><h3>Добавление группы</h3></div>
-	<div class="panel panel-body">
-			<form class="form-horizontal" role="form" name="add-grup" method="post" action="/?page=add-grup">
-			  <div class="form-group">
-			    <label for="inputName" class="col-sm-4 control-label">Название</label>
-			    <div class="col-sm-8">
-			      <input name="name-grup" type="text" class="form-control" id="inputName" placeholder="Название" required>
-			    </div>
-			  </div>
-			  <div class="form-group">
-			    <label for="inputData" class="col-sm-4 control-label">Дата начала семестра</label>
-			    <div class="col-sm-8">
-			      <input name="data-tart-grup" type="date" class="form-control" id="inputDta" placeholder="Дата начала семестра" required>
-			    </div>
-			  </div>
-			  <div class="form-group">
-			    <label for="inputPin" class="col-sm-4 control-label">Пин код для доступа к редактированию</label>
-			    <div class="col-sm-8">
-			      <input name="pin-grup" type="text" class="form-control" id="inputPin" placeholder="Пин код для доступа к редактированию" required>
-			    </div>
-			  </div>
-			  <div class="form-group">
-			    <div class="col-sm-offset-4 col-sm-8">
-			      <button type="submit" class="btn btn-default">Добавить</button>
-			    </div>
-			  </div>
-			</form>
-	</div>
-	<?php
-	}
-	elseif($_GET['page'] == 'add-par-bonch'){
-		if($_SESSION['mast']){
-	?>
-	<div class="page-header"><h3>Добавление расписания Бонч</h3></div>
-	<div class="panel panel-body">
-	<p>Зайди на эту страницу: <a href="https://cabinet.sut.ru/raspisanie_all_new">линк</a>, сохранить страницу как и загрузить сюда.</p>
-		<form enctype="multipart/form-data" class="form-horizontal" role="form" name="add-par-bonch" method="post" action="/?page=add-par-bonch">
-			<div class="form-group">
-			    <label for="inputName" class="col-sm-4 control-label">Название</label>
-			    <div class="col-sm-8">
-			      <input name="name-grup" type="text" class="form-control" id="inputName" placeholder="Название" required>
-			    </div>
-			  </div>
-			<div class="form-group">
-			    <label for="inputFile" class="col-sm-4 control-label">Загрузить фаил расписания</label>
-			    <div class="col-sm-8">
-			    	<input type="hidden" name="MAX_FILE_SIZE" value="30000" />
-			    	<input name="file-grup" type="file" id="inputFile" required>
-				</div>
-			</div>
-			<div class="form-group">
-			    <label for="inputData" class="col-sm-4 control-label">Дата начала семестра</label>
-			    <div class="col-sm-8">
-			      <input name="data-tart-grup" type="date" class="form-control" id="inputDta" placeholder="Дата начала семестра" required>
-			    </div>
-			  </div>
-			<div class="form-group">
-			    <label for="inputPin" class="col-sm-4 control-label">Пин код для доступа к редактированию</label>
-			    <div class="col-sm-8">
-			    	<input name="pin-grup" type="text" class="form-control" id="inputPin" placeholder="Пин код для доступа к редактированию" required>
-				</div>
-			</div>
-			<div class="form-group">
-			    <div class="col-sm-offset-4 col-sm-8">
-			    	<button type="submit" class="btn btn-default">Добавить</button>
-			    </div>
-			</div>
-		</form>
-	</div>
-	<?php
-	}
-	}
-	else{
+	
+
     if((!isset($_COOKIE['id'])) or $vibr_grup) //Выбор группы
     {
     	if($rez = $mysqli->query( "SELECT groups_original.`ID` as 'id_grup', timetable.`class` as 'name' FROM timetable LEFT JOIN groups_original ON timetable.`class` = groups_original.`Naimenovanie` GROUP BY timetable.`class` ORDER BY timetable.`class`")){
@@ -226,81 +153,8 @@ require("code.php");
 		if(!isset($error1)){
 			if(isset($alert2))
 			echo $alert2;
-		if($_GET['page'] == 'add-par'){
-			if(isset($pin) && ($_COOKIE['pin'.$id_grup] == $pin)){
-		?>
-		<div class="panel panel-body">
-			<form role="form" name="add-para" method="post" action="/?page=add-par">
-				<div class="form-group">
-					<label for="inputDay">День недели</label>
-					<select name="day-par" class="form-control" id="inputDay">
-					  <option>1</option>
-					  <option>2</option>
-					  <option>3</option>
-					  <option>4</option>
-					  <option>5</option>
-					  <option>6</option>
-					  <option>0</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label for="inputNum">№ пары</label>
-					<select name="num-par" class="form-control" id="inputNum">
-					  <option>1</option>
-					  <option>2</option>
-					  <option>3</option>
-					  <option>4</option>
-					  <option>5</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label for="inputName">Название пары</label>
-				    <input name="name-par" type="text" class="form-control" id="inputName" placeholder="Название пары" required>
-				</div>
-				<div class="form-group">
-					<label for="inputType">Тип пары</label>
-				    <select name="type-par" class="form-control" id="inputType">
-					  <option>Лекция</option>
-					  <option>Практические занятия</option>
-					  <option>Лабораторная работа</option>
-					  <option>Консультация</option>
-					  <option>Экзамен</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label for="inputWeek">По каким неделям</label>
-				    <input name="week-par" type="text" class="form-control" id="inputWeek" placeholder="По каким неделям" required>
-				</div>
-				<div class="form-group">
-					<label for="inputPrepod">Преподаватель</label>
-				    <input name="prepod-par" type="text" class="form-control" id="inputPrepod" placeholder="Преподаватель" required>
-				</div>
-				<div class="form-group">
-					<label for="inputAyd">Аудитория</label>
-				    <input name="aud-par" type="text" class="form-control" id="inputAyd" placeholder="Аудитория" required>
-				</div>
-				<button type="submit" class="btn btn-default">Добавить</button>
-			</form>
-		</div>
-		<?php
-		}
-		} //------------------------------Добавление пары
-		elseif($_GET['page'] == 'allow-edit-par'){ //------------------------------------------------------------
-		?>
-		<div class="panel panel-body">
-			<form class="form-horizontal" role="form" name="add-pin" method="post" action="/?page=allow-edit-par">
-				<div class="form-group">
-					<label for="inputPin1">Пин код для доступа к редактированию группы <?=$name_grup?></label>
-				    <input name="pingrup" type="text" class="form-control" id="inputPin1" placeholder="Пин" required>
-				</div>
-			  <div class="form-group">
-			      <button type="submit" class="btn btn-default">Ввести</button>
-			  </div>
-			</form>
-		</div>
-		<?php		
-		} //-------------------Разрешение на редактирование
-		elseif($_GET['page'] == 'all-par'){
+
+		if($_GET['page'] == 'all-par'){
 			if(isset($_GET['num'])){
 				$week_all = htmlspecialchars($_GET['num']);
 				$popravka = $week_all-$week;
@@ -354,7 +208,6 @@ require("code.php");
   		</div>
 			<?php
 				if($rez = $mysqli->query("SELECT * FROM timetable WHERE class = '$name_grup' AND `date`='$workday' ORDER BY `timeStart` ASC")){
-					//WHERE id_grup = $id_grup AND den = $num_day ORDER BY `para` ASC
 					if(($rez->num_rows)>0){
 						$num_par = 0;
 						while($result = $rez->fetch_assoc()){
@@ -367,44 +220,8 @@ require("code.php");
 							<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><b>'.$result['para'].'</b><br>'.gmdate("H:i", $nachalo).'<br>'.gmdate("H:i", $konec).'</td>
 							<td colspan="2">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span></td></tr>
 							<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$prepod.'</td></tr>';
-
-
-							//$weeks = explode(", ", $result['weeks']);
-							//foreach($weeks as $week1){
-							//	if($week1 == $week_all){
-							//		$num_par++;
-							//		$result['time'] = $result['time']=="" ? $time_start_par[$result['para']-1] : $result['time'];
-							//		$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['prepod']);
-							//		$list_par[$num_par] = '<tr class="bright bleft">
-							//		<td rowspan="2" style="border-bottom: 2px solid #000000;"><b>'.$result['para'].'</b><br>'.$result['time'].'</td>
-							//		<td colspan="2">'.$result['name'].' <span class="label label-default">'.$result['type'].'</span></td></tr>
-							//		<tr class="bbottom bright"><td style="word-wrap: break-word;">'.$result['auditor'].'</td><td>'.$prepod.'</td></tr>';
-							//		break;
-							//	}
-							//}
 						}
 						if($num_par > '0'){
-								/*
-									$list_par[$result['para']] = '<li class="list-group-item"><p>
-									<span class="label label-primary">Пара №'.$result['para'].'
-									</span> <span class="label label-success">Аудитория: '.$result['auditor'].'</span>
-									<p>'.$result['name'].'</p><span class="label label-default">
-									'.$result['type'].'</span> <span class="label label-info">'.$result['prepod'].'</span></li>';
-								*/
-								
-								/*
-									$list_par[$result['para']] = '<tr class="bright bleft">
-									<td rowspan="2" style="border-bottom: 2px solid #000000;"><b>'.$result['para'].'</b></td>
-									<td>ауд.<br>'.$result['auditor'].'</td>
-									<td>'.$result['prepod'].'<br>'.$result['type'].'</td></tr>
-									<tr class="bbottom bright"><td colspan="2">'.$result['name'].'</td></tr>';
-								*/
-								/*
-									$list_par[$result['para']] = '<tr class="bright bleft">
-									<td rowspan="2" style="border-bottom: 2px solid #000000;"><b>'.$result['para'].'</b></td>
-									<td colspan="2">'.$result['name'].' <span class="label label-default">'.$result['type'].'</span></td></tr>
-									<tr class="bbottom bright"><td>'.$result['auditor'].'</td><td>'.$result['prepod'].'</td></tr>';
-								*/
 					?>
 					<table class="table table-bordered">
 						<thead>
@@ -494,7 +311,7 @@ require("code.php");
     } //--------------------------------------------------------Основной вывод
     	}
     }
-    }
+    //}
     ?>
     </div><!-- /.container --> 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -566,7 +383,5 @@ require("code.php");
 </html>
 
 <?php
-//$mysqli->query("INSERT INTO `raspis` (id_grup, para, day, name, type, weeks, auditor, prepod) VALUES ('id$id_grup', 4, 1, 'Социология', 'Практическое занятие', '2.4.6.8.10.12.16', '536/2', 'Стрельникова.Т')");
-//$mysqli->query("INSERT INTO `grups` (`name`, `start`) VALUES ('ИКПИ-42', '2017-02-05')");
-//$mysqli->query("UPDATE grups SET start=$start_grup WHERE id_grup=$id_grup");
  $mysqli->close();
+ ?>
