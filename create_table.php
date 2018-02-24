@@ -1,5 +1,5 @@
 ﻿<?php
-require("config.php");
+//require("config.php");
 
 if($mysqli->query("CREATE TABLE `grups` (
   `id_grup` int(10) NOT NULL,

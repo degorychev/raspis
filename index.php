@@ -50,24 +50,26 @@ require("code.php");
           <ul class="nav navbar-nav">
             <li><a href="/?p">Выбрать группу</a></li>
             <li><a href="/?page=all-par">На всю неделю</a></li>
+			<!--
             <li class="dropdown">
           		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Еще <b class="caret"></b></a>
           		<ul class="dropdown-menu">
             		<li><a href="/?page=add-grup">Добавить группу</a></li>
             		<li class="divider"></li>
             		<li><a href="/?page=allow-edit-par">Доступ к редактированию</a></li>
-            		<?php
-            		if(isset($pin) && ($_COOKIE['pin'.$id_grup] == $pin)){
-            		echo '<li class="divider"></li>
-            		<li><a href="/?page=add-par">Добавить пару</a></li>';
+            		//<?php
+            		//if(isset($pin) && ($_COOKIE['pin'.$id_grup] == $pin)){
+            		//echo '<li class="divider"></li>
+            		//<li><a href="/?page=add-par">Добавить пару</a></li>';
             		//<li class="disabled"><a href="/?page=edit-par">Редактировать пары</a></li>';
-            		}
-            		if($_SESSION['mast']){
-            			echo '<li class="divider"></li>
-            			<li><a href="/?page=add-par-bonch">Добавление пар Бонч</a></li>';
-            		}?>
+            		//}
+            		//if($_SESSION['mast']){
+            		//	echo '<li class="divider"></li>
+            		//	<li><a href="/?page=add-par-bonch">Добавление пар Бонч</a></li>';
+            		//}?>
           		</ul>
         	</li>
+			-->
         	</ul>
         	<ul class="nav navbar-nav navbar-right">
         	<li><a style="padding-top: 10px; padding-bottom: 10px" href="#">
@@ -321,8 +323,6 @@ require("code.php");
 			}		
 			$work_data = date_create(); 
 			date_timestamp_set($work_data, $last_monday);
-
-			echo date_format($work_data, "d M Y");
 			date_modify($work_data, '-1 day');
 			?>
 			<div class="panel panel-info text-center"><div class="panel-heading"><h3 class="panel-title">Сейчас показана <b><?=$week_all?></b> неделя.</h3></div></div>
@@ -532,7 +532,7 @@ require("code.php");
 
 	window.setInterval(function(){
 		var date = new Date();
-		date.setUTCHours(date.getUTCHours()+3);
+		date.setUTCHours(date.getUTCHours()+4);
 		var hours = date.getUTCHours();
 		var minutes = date.getMinutes();
 		var seconds = date.getSeconds();
