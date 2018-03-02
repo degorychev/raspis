@@ -1,6 +1,9 @@
 <?php
+session_start();
+
 function get_table()
 {
+	
 	function get_shedule($name_grup, $den)
 	{
 		require("config.php");
@@ -20,10 +23,12 @@ function get_table()
 					<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$prepod.'</td></tr>';
 
 				}
+				$rez->free();
 				return $list_par;
             }
         }else{
 			echo '<div class="alert alert-danger">Ошибка запроса расписания</div>';
+			$rez->free();
 			return false;
 		}
 	}
@@ -63,5 +68,41 @@ function get_table()
 		</div><!--Основной вывод расписания-->';
 		return $print;
 	}
+}
+
+function day_of_week($num){//--------------------------День недели буквами
+	switch ($num){
+		case 0:
+			return "Воскресенье";
+		case 1:
+			return "Понедельник";
+		case 2:
+			return "Вторник";
+		case 3:
+			return "Среда";
+		case 4:
+			return "Четверг";
+		case 5:
+			return "Пятница";
+		case 6:
+			return "Суббота";
+		case 7:
+			return "Воскресенье";
+	}
+}
+
+function get_groupname($id_group){
+	require("config.php");
+	$name_grup = "";
+	if($rez = $mysqli->query("SELECT Naimenovanie as 'name' FROM groups_original WHERE ID = $id_group LIMIT 1")){
+		if(($rez->num_rows) == 1){
+			while($result = $rez->fetch_assoc()){
+				$name_grup = $result['name'];
+			}
+		}
+		$rez->free();
+	}
+	
+	return $name_grup;
 }
 ?>
