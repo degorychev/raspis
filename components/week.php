@@ -8,17 +8,12 @@
         if ($bias==1)
             $last_monday = strtotime("Next Monday");
         elseif($bias<0){
-            $bias--;
-            $last_monday = strtotime($bias." Monday");
+            $temp_bias = $bias-1;
+            $last_monday = strtotime($temp_bias." Monday");
         }
         elseif($bias!=0)
-            $last_monday = strtotime($bias." Monday");
-
-        
+            $last_monday = strtotime($bias." Monday");        
     }
-    
-
-
 ?>
 
 <div class="panel panel-info text-center">
