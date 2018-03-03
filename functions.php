@@ -32,9 +32,6 @@ function get_table($name_grup, $den)
 {	
 	$PARI = get_shedule($name_grup, $den);
 	$print = '
-		<div class="row"><!--Основной вывод расписания-->
-			<div class="col-xs-12 col-md-4 col-md-offset-4">
-				<div style="background: " class="panel panel-default">
 					<table class="table table-bordered">
 						<thead>
 							<tr class="btop bleft bbottom bright">
@@ -58,10 +55,7 @@ function get_table($name_grup, $den)
 			}
 			$print = $print.'
 						</tbody>
-					</table>
-				</div>
-			</div>
-		</div><!--Основной вывод расписания-->';
+					</table>';
 	return $print;	
 }
 
@@ -100,4 +94,10 @@ function get_groupname($id_group){
 	
 	return $name_grup;
 }
+
+$monthes = array(
+	1 => 'Января', 2 => 'Февраля', 3 => 'Марта', 4 => 'Апреля',
+	5 => 'Мая', 6 => 'Июня', 7 => 'Июля', 8 => 'Августа',
+	9 => 'Сентября', 10 => 'Октября', 11 => 'Ноября', 12 => 'Декабря'
+);
 ?>

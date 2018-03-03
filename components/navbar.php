@@ -12,8 +12,8 @@
     </div>
     <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-            <li><a href="/?p">Выбрать группу</a></li>
-            <li><a href="/?page=all-par">На всю неделю</a></li>
+            <li><a href="?p">Выбрать группу</a></li>
+            <li><a href="?page=all-par">На всю неделю</a></li>
         </ul>
     </div><!--/.nav-collapse -->					
 </div><!--Строка меню-->
