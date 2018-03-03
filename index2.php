@@ -6,7 +6,8 @@
 	ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     
-    $vibr_grup = false;
+	$vibr_grup = false;
+	$name_group = get_groupname($_COOKIE['id']);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -45,7 +46,7 @@
 			if((!isset($_COOKIE['id'])) or $vibr_grup) //Выбор группы
 			{
                 include('components/setgroup.php');
-            }else{
+            }else{				
                 include('components/infobar.php');
                 include('components/oneday.php');
             }

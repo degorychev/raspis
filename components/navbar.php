@@ -1,6 +1,3 @@
-<?php
-$name_grup = get_groupname(15);
-?>
 
 
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -11,7 +8,7 @@ $name_grup = get_groupname(15);
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/">Расписание <?=$name_grup?></a>
+        <a class="navbar-brand" href="/">Расписание <?=$name_group?></a>
     </div>
     <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
