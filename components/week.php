@@ -23,8 +23,8 @@
 </div>
 
 <ul class="pager">
-    <li class="previous"><a href="/?page=all-par&num=<?=$bias-1?>">&larr; Предыдущая</a></li>
-	<li class="next"><a href="/?page=all-par&num=<?=$bias+1?>">Следующая &rarr;</a></li>
+    <li class="previous"><a href="?page=all-par&num=<?=$bias-1?>">&larr; Предыдущая</a></li>
+	<li class="next"><a href="?page=all-par&num=<?=$bias+1?>">Следующая &rarr;</a></li>
 </ul>
 <div class="row">
 
