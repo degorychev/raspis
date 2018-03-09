@@ -47,7 +47,14 @@
             <div class="panel-heading">
                 <h3 class="panel-title"><?=day_of_week(date("N", $normdata))." (".date('d ', $normdata).$monthes[(date('n', $normdata))],")" ?></h3>
 			</div>
-            <?php echo get_table($name_group, date_format($work_day, "Y-m-d")); ?>
+            <?php 
+            if ($_COOKIE['pos'] == 1){
+                echo get_table($name_group, date_format($work_day, "Y-m-d")); 
+            }elseif($_COOKIE['pos'] == 2){
+                echo get_table_teacher($name_group, date_format($work_day, "Y-m-d"));
+            }
+            
+            ?>
         </div>
     </div>
     
