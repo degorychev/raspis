@@ -19,7 +19,11 @@ if(isset($_GET['day'])){
     <div class="col-xs-12 col-md-4 col-md-offset-4">
         <div style="background: " class="panel panel-default">
 <?php
-echo get_table($name_group, $newday);
+if ($_COOKIE['pos'] == 1){
+    echo get_table($name_group, $newday);
+}elseif($_COOKIE['pos'] == 2){
+    echo get_table_teacher($name_group, $newday);
+}
 ?>
 
         </div>

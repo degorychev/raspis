@@ -29,7 +29,7 @@
 	</head>
 	<body>
 
-			<?php echo get_table();?>
+			<?php echo get_table_teacher('Чоракаев О.Э.', '2018-03-12');?>
 
 	</body>
 	</html>
