@@ -9,8 +9,8 @@ function get_shedule($name_grup, $den){
 			while($result = $rez->fetch_assoc()){
 				$num_par++;
 				$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['teacher']);
-				$nachalo=strtotime($result['timeStart']."+1 HOUR");
-				$konec=strtotime($result['timeStop']."+1 HOUR");
+				$nachalo=strtotime($result['timeStart']."+3 HOUR");//Почему БЫЛО +1 час?
+				$konec=strtotime($result['timeStop']."+3 HOUR");
                     
                 $list_par[$num_par] = '
                 	<tr class="para_num_'.$num_par.' bright bleft">
@@ -67,8 +67,8 @@ function get_shedule_teacher($name_teacher, $den){
 			while($result = $rez->fetch_assoc()){
 				$num_par++;
 				$group = str_replace('<span' ,'<span data-toggle="tooltip"', $result['class']);
-				$nachalo=strtotime($result['timeStart']."+1 HOUR");
-				$konec=strtotime($result['timeStop']."+1 HOUR");
+				$nachalo=strtotime($result['timeStart']."+3 HOUR");
+				$konec=strtotime($result['timeStop']."+3 HOUR");
                     
                 $list_par[$num_par] = '
                 	<tr class="para_num_'.$num_par.' bright bleft">

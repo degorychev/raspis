@@ -28,8 +28,6 @@
 		</style>
 	</head>
 	<body>
-
-			<?php echo get_table_teacher('Чоракаев О.Э.', '2018-03-12');?>
-
+	Время сейчас: <?php echo date('G:i:s',(time()+60*60*3));?>
 	</body>
 	</html>
