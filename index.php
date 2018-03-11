@@ -52,6 +52,9 @@
 			.bbottom{
 			border-bottom: 2px solid #000000;
 			}
+			.fullheight{
+			min-height: 80vh;
+			}
 		</style>
 		<!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -59,26 +62,24 @@
 		<![endif]-->
 	</head>
 	<body>
-        <?php include('components/navbar.php'); ?>
-        <div style="margin-top: 70px;" class="container">
-			<?php
-			if(!isset($_COOKIE['id']) or (!isset($_COOKIE['pos'])) or (isset($_GET['p']))) //Выбор группы
-			{
-                include('components/setgroup.php');
-            }else{
-				include('components/infobar.php');
-				if($_GET['page'] == 'all-par'){
-					include('components/week.php');
+		<div class="fullheight">
+			<?php include('components/navbar.php'); ?>
+			<div style="margin-top: 70px;" class="container">
+				<?php
+				if(!isset($_COOKIE['id']) or (!isset($_COOKIE['pos'])) or (isset($_GET['p']))) //Выбор группы
+				{
+					include('components/setgroup.php');
 				}else{
-					include('components/oneday.php');
+					include('components/infobar.php');
+					if($_GET['page'] == 'all-par'){
+						include('components/week.php');
+					}else{
+						include('components/oneday.php');
+					}
 				}
-            }
-			?>
-
-			
-
-
-        </div>
+				?>
+			</div>
+		</div>
 		<?php include('components/footer.php'); ?>
         <?php include('components/scripts.php'); ?>
     </body>
