@@ -68,6 +68,8 @@
 				<?php
 				if($_GET['page'] == 'problem'){
 					include('components/problem.php');
+				}else if($_GET['page'] == 'problem_finder'){
+					include('components/problem_finder.php');
 				}else{
 					if(!isset($_COOKIE['id']) or (!isset($_COOKIE['pos'])) or (isset($_GET['p']))) //Выбор группы
 					{

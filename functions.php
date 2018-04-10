@@ -41,6 +41,85 @@ function validity2($den, $time, $prepod, $cab){
 	return true;
 }
 
+function get_problem_table($den, $time, $prepod, $cabinet){
+	require("config.php");
+	$output = '';
+	if (!validity1(htmlspecialchars($den), htmlspecialchars($time), htmlspecialchars($prepod), htmlspecialchars($cabinet))){
+		$output = $output."Преподаватель обнаружен в нескольких кабинетах одновременно!";
+		$rez = $mysqli->query("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod'))");
+
+		$output = $output.'<table border="1">';
+		$output = $output.'<thead>';
+		$output = $output.'<tr>';
+		$output = $output.'<th>дата</th>';
+		$output = $output.'<th>время</th>';
+		$output = $output.'<th>группа</th>';
+		$output = $output.'<th>дисциплина</th>';
+		$output = $output.'<th>тип</th>';
+		$output = $output.'<th>преподаватель</th>';
+		$output = $output.'<th>кабинет</th>';
+		$output = $output.'<th>файл</th>';
+		$output = $output.'</tr>';
+		$output = $output.'</thead>';
+		$output = $output.'<tbody>';
+		
+		while($data = mysqli_fetch_array($rez)){ 
+			$output = $output.'<tr>';
+			$output = $output.'<td>' . $data['date'] . '</td>';
+			$output = $output.'<td>' . $data['timeStart'] . '</td>';
+			$output = $output.'<td>' . $data['class'] . '</td>';
+			$output = $output.'<td>' . $data['discipline'] . '</td>';
+			$output = $output.'<td>' . $data['type'] . '</td>';
+			$output = $output.'<td>' . $data['teacher'] . '</td>';
+			$output = $output.'<td>' . $data['cabinet'] . '</td>';
+			$output = $output.'<td>' . $data['file'] . '</td>';
+			$output = $output.'</tr>';
+		}
+		
+		$output = $output.'</tbody>';
+		$output = $output.'</table>';
+
+	}
+	if (!validity2(htmlspecialchars($den), htmlspecialchars($time), htmlspecialchars($prepod), htmlspecialchars($cabinet))){
+		$output = $output."В одном кабинете обнаружено несколько преподавателей одновременно!";
+	
+		$rez = $mysqli->query("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cabinet'))");
+
+		$output = $output.'<table border="1">';
+		$output = $output.'<thead>';
+		$output = $output.'<tr>';
+		$output = $output.'<th>дата</th>';
+		$output = $output.'<th>время</th>';
+		$output = $output.'<th>группа</th>';
+		$output = $output.'<th>дисциплина</th>';
+		$output = $output.'<th>тип</th>';
+		$output = $output.'<th>преподаватель</th>';
+		$output = $output.'<th>кабинет</th>';
+		$output = $output.'<th>файл</th>';
+		$output = $output.'</tr>';
+		$output = $output.'</thead>';
+		$output = $output.'<tbody>';
+		
+		while($data = mysqli_fetch_array($rez)){ 
+			$output = $output.'<tr>';
+			$output = $output.'<td>' . $data['date'] . '</td>';
+			$output = $output.'<td>' . $data['timeStart'] . '</td>';
+			$output = $output.'<td>' . $data['class'] . '</td>';
+			$output = $output.'<td>' . $data['discipline'] . '</td>';
+			$output = $output.'<td>' . $data['type'] . '</td>';
+			$output = $output.'<td>' . $data['teacher'] . '</td>';
+			$output = $output.'<td>' . $data['cabinet'] . '</td>';
+			$output = $output.'<td>' . $data['file'] . '</td>';
+			$output = $output.'</tr>';
+		}
+		
+		$output = $output.'</tbody>';
+		$output = $output.'</table>';
+
+	}
+	return $output;
+}
+
 function get_shedule($name_grup, $den){
 	require("config.php");
 	if($rez = $mysqli->query("SELECT * FROM timetable WHERE class = '$name_grup' AND `date`='$den' ORDER BY `timeStart` ASC")){

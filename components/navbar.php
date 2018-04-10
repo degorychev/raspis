@@ -14,6 +14,7 @@
         <ul class="nav navbar-nav">
             <li><a href="?p">Представиться</a></li>
             <li><a href="?page=all-par">На всю неделю</a></li>
+            <li><a href="?page=problem_finder">Баг-трекер</a></li>
             <li><a href="old">Старая версия</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
