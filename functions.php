@@ -2,42 +2,46 @@
 session_start();
 function validity1($den, $time, $prepod, $cab){
 	require("config.php");
-	if($rez = $mysqli->query("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod'))")){
-		//echo "SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod')) <br>";
-		$num = mysqli_num_rows($rez);
-		if ($num>1){
-			$result = $rez->fetch_assoc();
-			$normalkab=$result['cabinet'];
-			while($result = $rez->fetch_assoc()){
-				if($normalkab != $result['cabinet'])
-				{
-					$rez->free();
-					return false;
+	if(strcmp($prepod,'Неизвестно')){
+		if($rez = $mysqli->query("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod') and (`cabinet`!='0'))")){
+			//echo "SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod')) <br>";
+			$num = mysqli_num_rows($rez);
+			if ($num>1){
+				$result = $rez->fetch_assoc();
+				$normalkab=$result['cabinet'];
+				while($result = $rez->fetch_assoc()){
+					if($normalkab != $result['cabinet'])
+					{
+						$rez->free();
+						return false;
+					}
 				}
 			}
 		}
 	}
-	$rez->free();
+	//$rez->free();
 	return true;
 }
 function validity2($den, $time, $prepod, $cab){
 	require("config.php");
-	if($rez = $mysqli->query("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cab'))")){
-		//echo "<br> SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cab')) <hr>";
-		$num = mysqli_num_rows($rez);
-		if ($num>1){
-			$result = $rez->fetch_assoc();
-			$normalprepod=$result['teacher'];
-			while($result = $rez->fetch_assoc()){
-				if($normalprepod != $result['teacher'])
-				{
-					$rez->free();
-					return false;
+	if(strcmp($cab,'УК-2')){
+		if($rez = $mysqli->query("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cab') and `teacher`!='Неизвестно')")){
+			//echo "<br> SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cab')) <hr>";
+			$num = mysqli_num_rows($rez);
+			if ($num>1){
+				$result = $rez->fetch_assoc();
+				$normalprepod=$result['teacher'];
+				while($result = $rez->fetch_assoc()){
+					if($normalprepod != $result['teacher'])
+					{
+						$rez->free();
+						return false;
+					}
 				}
 			}
 		}
 	}
-	$rez->free();
+	//$rez->free();
 	return true;
 }
 
@@ -77,7 +81,7 @@ function get_problem_table($den, $time, $prepod, $cabinet){
 		}
 		
 		$output = $output.'</tbody>';
-		$output = $output.'</table>';
+		$output = $output.'</table><hr>';
 
 	}
 	if (!validity2(htmlspecialchars($den), htmlspecialchars($time), htmlspecialchars($prepod), htmlspecialchars($cabinet))){
@@ -114,7 +118,7 @@ function get_problem_table($den, $time, $prepod, $cabinet){
 		}
 		
 		$output = $output.'</tbody>';
-		$output = $output.'</table>';
+		$output = $output.'</table><hr>';
 
 	}
 	return $output;

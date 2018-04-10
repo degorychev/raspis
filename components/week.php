@@ -2,7 +2,7 @@
     $week_show=(int)((date('z') - date('z',$start_grup))/7)+1;
     $last_monday = strtotime("last Monday");
     if(isset($_GET['num'])){
-        $bias = htmlspecialchars($_GET['num']);
+        $bias = htmlspecialchars($_GET['num'])($_GET['num']);
         $week_show += $bias;
 
         if ($bias==1)
