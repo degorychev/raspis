@@ -2,7 +2,7 @@
 session_start();
 function validity1($den, $time, $prepod, $cab){
 	require("config.php");
-	if(strcmp($prepod,'Неизвестно')){
+	//if(strcmp($prepod,'Неизвестно')){
 		if($rez = $mysqli->query("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod') and (`cabinet`!='0'))")){
 			//echo "SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod')) <br>";
 			$num = mysqli_num_rows($rez);
@@ -18,13 +18,13 @@ function validity1($den, $time, $prepod, $cab){
 				}
 			}
 		}
-	}
+	//}
 	//$rez->free();
 	return true;
 }
 function validity2($den, $time, $prepod, $cab){
 	require("config.php");
-	if(strcmp($cab,'УК-2')){
+	//if(strcmp($cab,'УК-2')){
 		if($rez = $mysqli->query("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cab') and `teacher`!='Неизвестно')")){
 			//echo "<br> SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cab')) <hr>";
 			$num = mysqli_num_rows($rez);
@@ -40,7 +40,7 @@ function validity2($den, $time, $prepod, $cab){
 				}
 			}
 		}
-	}
+	//}
 	//$rez->free();
 	return true;
 }
@@ -129,8 +129,13 @@ function get_shedule($name_grup, $den){
 	if($rez = $mysqli->query("SELECT * FROM timetable WHERE class = '$name_grup' AND `date`='$den' ORDER BY `timeStart` ASC")){
 		if(($rez->num_rows)>0){
 			$num_par = 0;
-			while($result = $rez->fetch_assoc()){				
-				$validation = ((validity1($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])) and (validity2($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])));
+			while($result = $rez->fetch_assoc()){
+				if (!strcmp($result['cabinet'],'УК-2') or !strcmp($result['teacher'],'Неизвестно')){
+					$validation = true;
+				}else{
+					$validation = ((validity1($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])) and (validity2($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])));
+				}
+
 				$num_par++;
 				$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['teacher']);
 				$nachalo=strtotime($result['timeStart']."+3 HOUR");//Почему БЫЛО +1 час?
@@ -195,7 +200,11 @@ function get_shedule_teacher($name_teacher, $den){
 		if(($rez->num_rows)>0){
 			$num_par = 0;
 			while($result = $rez->fetch_assoc()){
-				$validation = ((validity1($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])) and (validity2($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])));
+				if (!strcmp($result['cabinet'],'УК-2') or !strcmp($result['teacher'],'Неизвестно')){
+					$validation = true;
+				}else{
+					$validation = ((validity1($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])) and (validity2($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])));
+				}
 				$num_par++;
 				$group = str_replace('<span' ,'<span data-toggle="tooltip"', $result['class']);
 				$nachalo=strtotime($result['timeStart']."+3 HOUR");
