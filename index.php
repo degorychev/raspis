@@ -66,15 +66,19 @@
 			<?php include('components/navbar.php'); ?>
 			<div style="margin-top: 70px;" class="container">
 				<?php
-				if(!isset($_COOKIE['id']) or (!isset($_COOKIE['pos'])) or (isset($_GET['p']))) //Выбор группы
-				{
-					include('components/setgroup.php');
+				if($_GET['page'] == 'problem'){
+					include('components/problem.php');
 				}else{
-					include('components/infobar.php');
-					if($_GET['page'] == 'all-par'){
-						include('components/week.php');
+					if(!isset($_COOKIE['id']) or (!isset($_COOKIE['pos'])) or (isset($_GET['p']))) //Выбор группы
+					{
+						include('components/setgroup.php');
 					}else{
-						include('components/oneday.php');
+						include('components/infobar.php');
+						if($_GET['page'] == 'all-par'){
+							include('components/week.php');
+						}else{
+							include('components/oneday.php');
+						}
 					}
 				}
 				?>

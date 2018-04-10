@@ -1,21 +1,68 @@
 <?php
 session_start();
+function validity1($den, $time, $prepod, $cab){
+	require("config.php");
+	if($rez = $mysqli->query("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod'))")){
+		//echo "SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod')) <br>";
+		$num = mysqli_num_rows($rez);
+		if ($num>1){
+			$result = $rez->fetch_assoc();
+			$normalkab=$result['cabinet'];
+			while($result = $rez->fetch_assoc()){
+				if($normalkab != $result['cabinet'])
+				{
+					$rez->free();
+					return false;
+				}
+			}
+		}
+	}
+	$rez->free();
+	return true;
+}
+function validity2($den, $time, $prepod, $cab){
+	require("config.php");
+	if($rez = $mysqli->query("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cab'))")){
+		//echo "<br> SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cab')) <hr>";
+		$num = mysqli_num_rows($rez);
+		if ($num>1){
+			$result = $rez->fetch_assoc();
+			$normalprepod=$result['teacher'];
+			while($result = $rez->fetch_assoc()){
+				if($normalprepod != $result['teacher'])
+				{
+					$rez->free();
+					return false;
+				}
+			}
+		}
+	}
+	$rez->free();
+	return true;
+}
 
 function get_shedule($name_grup, $den){
 	require("config.php");
 	if($rez = $mysqli->query("SELECT * FROM timetable WHERE class = '$name_grup' AND `date`='$den' ORDER BY `timeStart` ASC")){
 		if(($rez->num_rows)>0){
 			$num_par = 0;
-			while($result = $rez->fetch_assoc()){
+			while($result = $rez->fetch_assoc()){				
+				$validation = ((validity1($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])) and (validity2($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])));
 				$num_par++;
 				$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['teacher']);
 				$nachalo=strtotime($result['timeStart']."+3 HOUR");//Почему БЫЛО +1 час?
 				$konec=strtotime($result['timeStop']."+3 HOUR");
-                    
+				
+				$conclusion ='test';
+				if($validation)
+					$conclusion='<span style="color: green;" class="glyphicon glyphicon-ok" title="Прошло проверку" aria-hidden="true"></span>';
+				else
+					$conclusion='<a href="?page=problem&date='.$result['date'].'&time='.$result['timeStart'].'&teacher='.$result['teacher'].'&cabinet='.$result['cabinet'].'"><span style="color: red;" class="glyphicon glyphicon-remove" title="Не прошло проверку, уточняйте в учебном отделе" aria-hidden="true"></span></a>';
+				
                 $list_par[$num_par] = '
                 	<tr class="para_num_'.$num_par.' bright bleft">
 					<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><br>'.gmdate("H:i", $nachalo).'<br>'.gmdate("H:i", $konec).'</td>
-					<td colspan="2">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span></td></tr>
+					<td colspan="2">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$conclusion.'</td></tr>
 					<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$prepod.'</td></tr>';
 			}
 			$rez->free();
@@ -65,15 +112,22 @@ function get_shedule_teacher($name_teacher, $den){
 		if(($rez->num_rows)>0){
 			$num_par = 0;
 			while($result = $rez->fetch_assoc()){
+				$validation = ((validity1($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])) and (validity2($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])));
 				$num_par++;
 				$group = str_replace('<span' ,'<span data-toggle="tooltip"', $result['class']);
 				$nachalo=strtotime($result['timeStart']."+3 HOUR");
 				$konec=strtotime($result['timeStop']."+3 HOUR");
-                    
+				
+				$conclusion ='test';
+				if($validation)
+					$conclusion='<span style="color: green;" class="glyphicon glyphicon-ok" title="Прошло проверку" aria-hidden="true"></span>';
+				else
+				$conclusion='<a href="?page=problem&date='.$result['date'].'&time='.$result['timeStart'].'&teacher='.$result['teacher'].'&cabinet='.$result['cabinet'].'"><span style="color: red;" class="glyphicon glyphicon-remove" title="Не прошло проверку, уточняйте в учебном отделе" aria-hidden="true"></span></a>';
+			
                 $list_par[$num_par] = '
                 	<tr class="para_num_'.$num_par.' bright bleft">
 					<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><br>'.gmdate("H:i", $nachalo).'<br>'.gmdate("H:i", $konec).'</td>
-					<td colspan="2">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span></td></tr>
+					<td colspan="2">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$conclusion.'</td></tr>
 					<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$group.'</td></tr>';
 			}
 			$rez->free();
