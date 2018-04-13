@@ -44,82 +44,104 @@ function validity2($den, $time, $prepod, $cab){
 	//$rez->free();
 	return true;
 }
+function validity3($den, $time, $prepod, $cab){
+	require("config.php");
+	//if(strcmp($cab,'УК-2')){
+		if($rez = $mysqli->query("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod') and `cabinet`!='0')")){
+			//echo "<br> SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cab')) <hr>";
+			$num = mysqli_num_rows($rez);
+			if ($num>1){
+				$result = $rez->fetch_assoc();
+				$normaldisc=$result['discipline'];
+				while($result = $rez->fetch_assoc()){
+					if($normaldisc != $result['discipline'])
+					{
+						$rez->free();
+						return false;
+					}
+				}
+			}
+		}
+	//}
+	//$rez->free();
+	return true;
+}
+function validity4($den, $time, $prepod, $cab){
+	require("config.php");
+	//if(strcmp($cab,'УК-2')){
+		if($rez = $mysqli->query("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cab') and `teacher`!='Неизвестно')")){
+			//echo "<br> SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cab')) <hr>";
+			$num = mysqli_num_rows($rez);
+			if ($num>1){
+				$result = $rez->fetch_assoc();
+				$normaldisc=$result['discipline'];
+				while($result = $rez->fetch_assoc()){
+					if($normaldisc != $result['discipline'])
+					{
+						$rez->free();
+						return false;
+					}
+				}
+			}
+		}
+	//}
+	//$rez->free();
+	return true;
+}
+function get_problem_table_node($query){
+	require("config.php");
+	$rez = $mysqli->query($query);
+	$output = $output.'<div class="table-responsive">';
+	$output = $output.'<table class="table table-striped table-bordered table-condensed">';
+	$output = $output.'<thead>';
+	$output = $output.'<tr>';
+	$output = $output.'<th>дата</th>';
+	$output = $output.'<th>время</th>';
+	$output = $output.'<th>группа</th>';
+	$output = $output.'<th>дисциплина</th>';
+	$output = $output.'<th>тип</th>';
+	$output = $output.'<th>преподаватель</th>';
+	$output = $output.'<th>кабинет</th>';
+	$output = $output.'<th>файл</th>';
+	$output = $output.'</tr>';
+	$output = $output.'</thead>';
+	$output = $output.'<tbody>';
+		
+		while($data = mysqli_fetch_array($rez)){ 
+			$output = $output.'<tr>';
+			$output = $output.'<td>' . $data['date'] . '</td>';
+			$output = $output.'<td>' . $data['timeStart'] . '</td>';
+			$output = $output.'<td>' . $data['class'] . '</td>';
+			$output = $output.'<td>' . $data['discipline'] . '</td>';
+			$output = $output.'<td>' . $data['type'] . '</td>';
+			$output = $output.'<td>' . $data['teacher'] . '</td>';
+			$output = $output.'<td>' . $data['cabinet'] . '</td>';
+			$output = $output.'<td>' . $data['file'] . '</td>';
+			$output = $output.'</tr>';
+		}
+		
+	$output = $output.'</tbody>';
+	$output = $output.'</table></div>';
+	return $output;
+}
 
 function get_problem_table($den, $time, $prepod, $cabinet){
-	require("config.php");
 	$output = '';
 	if (!validity1(htmlspecialchars($den), htmlspecialchars($time), htmlspecialchars($prepod), htmlspecialchars($cabinet))){
-		$output = $output."Преподаватель обнаружен в нескольких кабинетах одновременно!";
-		$rez = $mysqli->query("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod'))");
-
-		$output = $output.'<table border="1">';
-		$output = $output.'<thead>';
-		$output = $output.'<tr>';
-		$output = $output.'<th>дата</th>';
-		$output = $output.'<th>время</th>';
-		$output = $output.'<th>группа</th>';
-		$output = $output.'<th>дисциплина</th>';
-		$output = $output.'<th>тип</th>';
-		$output = $output.'<th>преподаватель</th>';
-		$output = $output.'<th>кабинет</th>';
-		$output = $output.'<th>файл</th>';
-		$output = $output.'</tr>';
-		$output = $output.'</thead>';
-		$output = $output.'<tbody>';
-		
-		while($data = mysqli_fetch_array($rez)){ 
-			$output = $output.'<tr>';
-			$output = $output.'<td>' . $data['date'] . '</td>';
-			$output = $output.'<td>' . $data['timeStart'] . '</td>';
-			$output = $output.'<td>' . $data['class'] . '</td>';
-			$output = $output.'<td>' . $data['discipline'] . '</td>';
-			$output = $output.'<td>' . $data['type'] . '</td>';
-			$output = $output.'<td>' . $data['teacher'] . '</td>';
-			$output = $output.'<td>' . $data['cabinet'] . '</td>';
-			$output = $output.'<td>' . $data['file'] . '</td>';
-			$output = $output.'</tr>';
-		}
-		
-		$output = $output.'</tbody>';
-		$output = $output.'</table><hr>';
-
+		$output = $output."<h3>Преподаватель ($prepod) обнаружен в нескольких кабинетах одновременно!</h3>";
+		$output = $output.get_problem_table_node("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod'))");
 	}
 	if (!validity2(htmlspecialchars($den), htmlspecialchars($time), htmlspecialchars($prepod), htmlspecialchars($cabinet))){
-		$output = $output."В одном кабинете обнаружено несколько преподавателей одновременно!";
-	
-		$rez = $mysqli->query("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cabinet'))");
-
-		$output = $output.'<table border="1">';
-		$output = $output.'<thead>';
-		$output = $output.'<tr>';
-		$output = $output.'<th>дата</th>';
-		$output = $output.'<th>время</th>';
-		$output = $output.'<th>группа</th>';
-		$output = $output.'<th>дисциплина</th>';
-		$output = $output.'<th>тип</th>';
-		$output = $output.'<th>преподаватель</th>';
-		$output = $output.'<th>кабинет</th>';
-		$output = $output.'<th>файл</th>';
-		$output = $output.'</tr>';
-		$output = $output.'</thead>';
-		$output = $output.'<tbody>';
-		
-		while($data = mysqli_fetch_array($rez)){ 
-			$output = $output.'<tr>';
-			$output = $output.'<td>' . $data['date'] . '</td>';
-			$output = $output.'<td>' . $data['timeStart'] . '</td>';
-			$output = $output.'<td>' . $data['class'] . '</td>';
-			$output = $output.'<td>' . $data['discipline'] . '</td>';
-			$output = $output.'<td>' . $data['type'] . '</td>';
-			$output = $output.'<td>' . $data['teacher'] . '</td>';
-			$output = $output.'<td>' . $data['cabinet'] . '</td>';
-			$output = $output.'<td>' . $data['file'] . '</td>';
-			$output = $output.'</tr>';
-		}
-		
-		$output = $output.'</tbody>';
-		$output = $output.'</table><hr>';
-
+		$output = $output."<h3>В одном кабинете ($cabinet) обнаружено несколько преподавателей одновременно!</h3>";
+		$output = $output.get_problem_table_node("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cabinet'))");
+	}
+	if (!validity3(htmlspecialchars($den), htmlspecialchars($time), htmlspecialchars($prepod), htmlspecialchars($cabinet))){
+		$output = $output."<h3>У одного преподавателя ($prepod) обнаружено несколько дисциплин одновременно!</h3>";
+		$output = $output.get_problem_table_node("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cabinet'))");
+	}
+	if (!validity4(htmlspecialchars($den), htmlspecialchars($time), htmlspecialchars($prepod), htmlspecialchars($cabinet))){
+		$output = $output."<h3>В одном кабинете ($cabinet) обнаружено несколько дисциплин одновременно!</h3>";
+		$output = $output.get_problem_table_node("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cabinet'))");
 	}
 	return $output;
 }
@@ -133,7 +155,10 @@ function get_shedule($name_grup, $den){
 				if (!strcmp($result['cabinet'],'УК-2') or !strcmp($result['teacher'],'Неизвестно')){
 					$validation = true;
 				}else{
-					$validation = ((validity1($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])) and (validity2($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])));
+					$validation = ((validity1($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])) and 
+					(validity2($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet']))  and 
+					(validity3($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet']))  and 
+					(validity4($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])));
 				}
 
 				$num_par++;
@@ -141,16 +166,18 @@ function get_shedule($name_grup, $den){
 				$nachalo=strtotime($result['timeStart']."+3 HOUR");//Почему БЫЛО +1 час?
 				$konec=strtotime($result['timeStop']."+3 HOUR");
 				
-				$conclusion ='test';
-				if($validation)
-					$conclusion='<span style="color: green;" class="glyphicon glyphicon-ok" title="Прошло проверку" aria-hidden="true"></span>';
-				else
+				$conclusion ='';
+				$warn_color = '';
+
+				if(!$validation){
 					$conclusion='<a href="?page=problem&date='.$result['date'].'&time='.$result['timeStart'].'&teacher='.$result['teacher'].'&cabinet='.$result['cabinet'].'"><span style="color: red;" class="glyphicon glyphicon-remove" title="Не прошло проверку, уточняйте в учебном отделе" aria-hidden="true"></span></a>';
-				
+					$warn_color = 'danger';
+				}
+
                 $list_par[$num_par] = '
                 	<tr class="para_num_'.$num_par.' bright bleft">
 					<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><br>'.gmdate("H:i", $nachalo).'<br>'.gmdate("H:i", $konec).'</td>
-					<td colspan="2">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$conclusion.'</td></tr>
+					<td colspan="2" class="'.$warn_color.'">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$conclusion.'</td></tr>
 					<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$prepod.'</td></tr>';
 			}
 			$rez->free();
@@ -203,23 +230,27 @@ function get_shedule_teacher($name_teacher, $den){
 				if (!strcmp($result['cabinet'],'УК-2') or !strcmp($result['teacher'],'Неизвестно')){
 					$validation = true;
 				}else{
-					$validation = ((validity1($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])) and (validity2($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])));
+					$validation = ((validity1($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])) and 
+					(validity2($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])) and 
+					(validity3($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])) and 
+					(validity4($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])));
 				}
 				$num_par++;
 				$group = str_replace('<span' ,'<span data-toggle="tooltip"', $result['class']);
 				$nachalo=strtotime($result['timeStart']."+3 HOUR");
 				$konec=strtotime($result['timeStop']."+3 HOUR");
 				
-				$conclusion ='test';
-				if($validation)
-					$conclusion='<span style="color: green;" class="glyphicon glyphicon-ok" title="Прошло проверку" aria-hidden="true"></span>';
-				else
-				$conclusion='<a href="?page=problem&date='.$result['date'].'&time='.$result['timeStart'].'&teacher='.$result['teacher'].'&cabinet='.$result['cabinet'].'"><span style="color: red;" class="glyphicon glyphicon-remove" title="Не прошло проверку, уточняйте в учебном отделе" aria-hidden="true"></span></a>';
-			
+				$conclusion ='';
+				$warn_color = '';
+				
+				if(!$validation){
+					$conclusion='<a href="?page=problem&date='.$result['date'].'&time='.$result['timeStart'].'&teacher='.$result['teacher'].'&cabinet='.$result['cabinet'].'"><span style="color: red;" class="glyphicon glyphicon-remove" title="Не прошло проверку, уточняйте в учебном отделе" aria-hidden="true"></span></a>';
+					$warn_color = 'danger';
+				}
                 $list_par[$num_par] = '
                 	<tr class="para_num_'.$num_par.' bright bleft">
 					<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><br>'.gmdate("H:i", $nachalo).'<br>'.gmdate("H:i", $konec).'</td>
-					<td colspan="2">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$conclusion.'</td></tr>
+					<td colspan="2" class="'.$warn_color.'">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$conclusion.'</td></tr>
 					<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$group.'</td></tr>';
 			}
 			$rez->free();
