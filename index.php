@@ -2,10 +2,6 @@
 	require("config.php");
 	require("functions.php");
 	require('components/setcookie.php');
-    
-	ini_set('error_reporting', E_ALL);
-	ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
 	
 	if(isset($_COOKIE['id']) && isset($_COOKIE['pos'])){
 		if ($_COOKIE['pos'] == 1){
@@ -70,6 +66,8 @@
 					include('components/problem.php');
 				}else if($_GET['page'] == 'problem_finder'){
 					include('components/problem_finder.php');
+				}else if($_GET['page'] == 'journal'){
+					include('components/journal.php');
 				}else{
 					if(!isset($_COOKIE['id']) or (!isset($_COOKIE['pos'])) or (isset($_GET['p']))) //Выбор группы
 					{

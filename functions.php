@@ -88,9 +88,11 @@ function validity4($den, $time, $prepod, $cab){
 	//$rez->free();
 	return true;
 }
+
 function get_problem_table_node($query){
 	require("config.php");
 	$rez = $mysqli->query($query);
+	$output = '';
 	$output = $output.'<div class="table-responsive">';
 	$output = $output.'<table class="table table-striped table-bordered table-condensed">';
 	$output = $output.'<thead>';
@@ -128,21 +130,70 @@ function get_problem_table_node($query){
 function get_problem_table($den, $time, $prepod, $cabinet){
 	$output = '';
 	if (!validity1(htmlspecialchars($den), htmlspecialchars($time), htmlspecialchars($prepod), htmlspecialchars($cabinet))){
-		$output = $output."<h3>Преподаватель ($prepod) обнаружен в нескольких кабинетах одновременно!</h3>";
+		$output = $output.'<div class="alert alert-danger">Преподаватель ('.$prepod.') обнаружен в нескольких кабинетах одновременно!</div>';
 		$output = $output.get_problem_table_node("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod'))");
 	}
 	if (!validity2(htmlspecialchars($den), htmlspecialchars($time), htmlspecialchars($prepod), htmlspecialchars($cabinet))){
-		$output = $output."<h3>В одном кабинете ($cabinet) обнаружено несколько преподавателей одновременно!</h3>";
+		$output = $output.'<div class="alert alert-danger">В одном кабинете ('.$cabinet.') обнаружено несколько преподавателей одновременно!</div>';
 		$output = $output.get_problem_table_node("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cabinet'))");
 	}
 	if (!validity3(htmlspecialchars($den), htmlspecialchars($time), htmlspecialchars($prepod), htmlspecialchars($cabinet))){
-		$output = $output."<h3>У одного преподавателя ($prepod) обнаружено несколько дисциплин одновременно!</h3>";
+		$output = $output.'<div class="alert alert-danger">У одного преподавателя ('.$prepod.') обнаружено несколько дисциплин одновременно!</div>';
 		$output = $output.get_problem_table_node("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cabinet'))");
 	}
 	if (!validity4(htmlspecialchars($den), htmlspecialchars($time), htmlspecialchars($prepod), htmlspecialchars($cabinet))){
-		$output = $output."<h3>В одном кабинете ($cabinet) обнаружено несколько дисциплин одновременно!</h3>";
+		$output = $output.'<div class="alert alert-danger">В одном кабинете ('.$cabinet.') обнаружено несколько дисциплин одновременно!</div>';
 		$output = $output.get_problem_table_node("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cabinet'))");
 	}
+	return $output;
+}
+
+function get_journal_table($group, $disc){
+	require("config.php");
+	$rez = $mysqli->query('select * from timetable where (class = "'.$group.'" and discipline = "'.$disc.'" and  date > "2018-01-01") order by date');
+	$output = '';
+	$output = $output.'<div class="table-responsive">';
+	$output = $output.'<table class="table table-bordered table-condensed">';
+	$output = $output.'<thead>';
+	$output = $output.'<tr>';
+	$output = $output.'<th>#</th>';
+	$output = $output.'<th>Дата</th>';
+	$output = $output.'<th>Время</th>';
+	//$output = $output.'<th>Дисциплина</th>';
+	$output = $output.'<th>Тип</th>';
+	$output = $output.'<th>Преподаватель</th>';
+	$output = $output.'<th>Кабинет</th>';
+	$output = $output.'<th>Подгруппа</th>';
+	$output = $output.'</tr>';
+	$output = $output.'</thead>';
+	$output = $output.'<tbody>';
+	$today = strtotime(date('Y-m-d'));
+	$schet = 0;
+	$flag = false;
+		while($data = mysqli_fetch_array($rez)){ 
+			if ($today <= strtotime($data['date'])){
+				$output = $output.'<tr class="bg-warning">';
+				if (!$flag){
+					$flag = true;
+					$schet = 0;
+				}
+			}
+			else
+				$output = $output.'<tr class="bg-success">';
+
+			$output = $output.'<td>' . ++$schet . '</td>';
+			$output = $output.'<td>' . $data['date'] . '</td>';
+			$output = $output.'<td>' . $data['timeStart'] . '</td>';
+			//$output = $output.'<td>' . $data['discipline'] . '</td>';
+			$output = $output.'<td>' . $data['type'] . '</td>';
+			$output = $output.'<td>' . $data['teacher'] . '</td>';
+			$output = $output.'<td>' . $data['cabinet'] . '</td>';
+			$output = $output.'<td>' . $data['subgroup'] . '</td>';
+			$output = $output.'</tr>';
+		}
+		
+	$output = $output.'</tbody>';
+	$output = $output.'</table></div>';
 	return $output;
 }
 
