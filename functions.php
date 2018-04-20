@@ -56,6 +56,7 @@ function validity3($den, $time, $prepod, $cab){
 				while($result = $rez->fetch_assoc()){
 					if($normaldisc != $result['discipline'])
 					{
+						//echo "SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod') and `cabinet`!='0') <hr>";
 						$rez->free();
 						return false;
 					}
@@ -139,7 +140,7 @@ function get_problem_table($den, $time, $prepod, $cabinet){
 	}
 	if (!validity3(htmlspecialchars($den), htmlspecialchars($time), htmlspecialchars($prepod), htmlspecialchars($cabinet))){
 		$output = $output.'<div class="alert alert-danger">У одного преподавателя ('.$prepod.') обнаружено несколько дисциплин одновременно!</div>';
-		$output = $output.get_problem_table_node("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`cabinet`='$cabinet'))");
+		$output = $output.get_problem_table_node("SELECT * FROM timetable WHERE ((`date`='$den') and (`timeStart`='$time') and (`teacher`='$prepod'))");
 	}
 	if (!validity4(htmlspecialchars($den), htmlspecialchars($time), htmlspecialchars($prepod), htmlspecialchars($cabinet))){
 		$output = $output.'<div class="alert alert-danger">В одном кабинете ('.$cabinet.') обнаружено несколько дисциплин одновременно!</div>';
