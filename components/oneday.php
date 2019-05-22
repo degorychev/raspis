@@ -10,14 +10,15 @@ if(isset($_GET['day'])){
 }
 
 ?>
-<ul class="pager">
-    <li class="previous"><a href="?day=<?=$day_calc-1?>">&larr; Предыдущий</a></li>
-    <li class="next"><a href="?day=<?=$day_calc+1?>">Следующий &rarr;</a></li>
+<ul class="row text-center pager">
+    <div class="col-md-4 col-xs-4"> <li class="previous"><a href="?day=<?=$day_calc-1?>">&larr;Пред. день</a></li></div>
+    <div class="col-md-4 col-xs-4"> <li><a href="?page=all-par">На всю неделю</a></li></div>
+    <div class="col-md-4 col-xs-4"> <li class="next"><a href="?day=<?=$day_calc+1?>">След. день&rarr;</a></li></div>
 </ul>
 
 <div class="row"><!--Основной вывод расписания-->
     <div class="col-xs-12 col-md-4 col-md-offset-4">
-        <div style="background: " class="panel panel-default">
+        <div class="panel panel-default">
 <?php
 if ($_COOKIE['pos'] == 1){
     echo get_table($name_group, $newday);

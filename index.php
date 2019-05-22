@@ -68,6 +68,8 @@
 					include('components/problem_finder.php');
 				}else if($_GET['page'] == 'journal'){
 					include('components/journal.php');
+				}else if($_GET['page'] == 'сabinet_schedule'){
+					include('components/cabinet.php');					
 				}else{
 					if(!isset($_COOKIE['id']) or (!isset($_COOKIE['pos'])) or (isset($_GET['p']))) //Выбор группы
 					{

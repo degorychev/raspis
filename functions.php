@@ -112,8 +112,8 @@ function get_problem_table_node($query){
 		
 		while($data = mysqli_fetch_array($rez)){ 
 			$output = $output.'<tr>';
-			$output = $output.'<td>' . $data['date'] . '</td>';
-			$output = $output.'<td>' . $data['timeStart'] . '</td>';
+			$output = $output.'<td>' . date("d.m.Y", strtotime($data['date'])) . '</td>';
+			$output = $output.'<td>' . date("H:i", strtotime($data['timeStart'])) . '</td>';
 			$output = $output.'<td>' . $data['class'] . '</td>';
 			$output = $output.'<td>' . $data['discipline'] . '</td>';
 			$output = $output.'<td>' . $data['type'] . '</td>';
@@ -149,9 +149,34 @@ function get_problem_table($den, $time, $prepod, $cabinet){
 	return $output;
 }
 
+function get_TimeOnSite(){
+	$context  = stream_context_create(array('http' => array('header' => 'Accept: application/xml')));
+	$url = 'http://xn--80ap5ae.xn--p1ai/category/%D1%80%D0%B0%D1%81%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5/feed/';
+
+	$xml = file_get_contents($url, false, $context);
+	$xml = simplexml_load_string($xml);
+
+	$mydate = $xml->channel->lastBuildDate;
+
+	$timeonsite = strtotime($mydate);
+	return $timeonsite;
+}
+
+function get_last_update(){
+	require("config.php");
+
+	$rez = $mysqli->query('SELECT `date_of_update` FROM timetable ORDER BY `date_of_update` DESC LIMIT 1');
+		while($data = mysqli_fetch_array($rez)){ 
+			$phpdate = strtotime($data['date_of_update']);
+			//$mysqldate = date( 'd.m.Y H:i', $phpdate );
+			return $phpdate;
+		}
+	return 'Ошибка';
+}
+
 function get_journal_table($group, $disc){
 	require("config.php");
-	$rez = $mysqli->query('select * from timetable where (class = "'.$group.'" and discipline = "'.$disc.'" and  date > "2018-01-01") order by date');
+	$rez = $mysqli->query('select * from timetable where (class = "'.$group.'" and discipline = "'.$disc.'" and  date > "'.date("Y-m-d", $start_grup).'") order by date');
 	$output = '';
 	$output = $output.'<div class="table-responsive">';
 	$output = $output.'<table class="table table-bordered table-condensed">';
@@ -183,7 +208,7 @@ function get_journal_table($group, $disc){
 				$output = $output.'<tr class="bg-success">';
 
 			$output = $output.'<td>' . ++$schet . '</td>';
-			$output = $output.'<td>' . $data['date'] . '</td>';
+			$output = $output.'<td>' . date("d.m.Y", strtotime($data['date'])) . '</td>';
 			$output = $output.'<td>' . $data['timeStart'] . '</td>';
 			//$output = $output.'<td>' . $data['discipline'] . '</td>';
 			$output = $output.'<td>' . $data['type'] . '</td>';
@@ -195,6 +220,63 @@ function get_journal_table($group, $disc){
 		
 	$output = $output.'</tbody>';
 	$output = $output.'</table></div>';
+	return $output;
+}
+
+function get_cabinet_table($cab, $date){
+	require("config.php");
+	$rez = $mysqli->query('select * from timetable where (cabinet = "'.$cab.'" and  date = "'.$date.'") ORDER BY `timeStart`;');
+	$output = '';
+	if(mysqli_num_rows($rez)!=0){
+		$output = $output.'<div class="table-responsive">';
+		$output = $output.'<table class="table table-bordered table-condensed">';
+		$output = $output.'<thead>';
+		$output = $output.'<tr>';
+		$output = $output.'<th>#</th>';
+		$output = $output.'<th>Время</th>';
+		$output = $output.'<th>Группа</th>';
+		$output = $output.'<th>Дисциплина</th>';
+		$output = $output.'<th>Тип</th>';
+		$output = $output.'<th>Преподаватель</th>';
+		$output = $output.'<th>Кабинет</th>';
+		$output = $output.'<th>Подгруппа</th>';
+		$output = $output.'</tr>';
+		$output = $output.'</thead>';
+		$output = $output.'<tbody>';
+		$today = strtotime(date('Y-m-d'));
+		$schet = 0;
+		$flag = false;
+			while($data = mysqli_fetch_array($rez)){ 
+				if ($today <= strtotime($data['date'])){//Исправить!
+					$output = $output.'<tr class="bg-warning">';
+					if (!$flag){
+						$flag = true;
+						$schet = 0;
+					}
+				}
+				else
+					$output = $output.'<tr class="bg-success">';
+
+				$output = $output.'<td>' . ++$schet . '</td>';
+				$output = $output.'<td>' . date("H:i", strtotime($data['timeStart'])) . '</td>';
+				$output = $output.'<td>' . $data['class'] . '</td>';
+				$output = $output.'<td>' . $data['discipline'] . '</td>';
+				$output = $output.'<td>' . $data['type'] . '</td>';
+				$output = $output.'<td>' . $data['teacher'] . '</td>';
+				$output = $output.'<td>' . $data['cabinet'] . '</td>';
+				$output = $output.'<td>' . $data['subgroup'] . '</td>';
+				$output = $output.'</tr>';
+			}
+			
+		$output = $output.'</tbody>';
+		$output = $output.'</table></div>';
+	}
+	else
+	{
+		$output = '<div class="alert alert-success" role="alert">
+			Похоже, в этот день кабинет пустует.
+		</div>';
+	}
 	return $output;
 }
 
@@ -245,8 +327,7 @@ function get_shedule($name_grup, $den){
 function get_table($name_grup, $den)
 {	
 	$PARI = get_shedule($name_grup, $den);
-	$print = '
-					<table class="table table-bordered">
+	$print = '<table class="table table-bordered">
 						<thead>
 							<tr class="btop bleft bbottom bright">
 								<th class="text-center">время</th>
@@ -384,7 +465,7 @@ function get_groupname($id_group){
 function get_teachername($id_prepod){
 	require("config.php");
 	$teacher_name = "";
-	if($rez = $mysqli->query("SELECT FIO as 'name' FROM prepodavatel_original WHERE ID = $id_prepod LIMIT 1")){
+	if($rez = $mysqli->query("SELECT Full_FIO as 'name' FROM prepodavatel_original WHERE ID = $id_prepod LIMIT 1")){
 		if(($rez->num_rows) == 1){
 			while($result = $rez->fetch_assoc()){
 				$teacher_name = $result['name'];

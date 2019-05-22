@@ -1,18 +1,34 @@
 <?php
     $week_show=(int)((date('z') - date('z',$start_grup))/7)+1;
-    $last_monday = strtotime("last Monday");
-    if(isset($_GET['num'])){
-        $bias = htmlspecialchars($_GET['num'])($_GET['num']);
-        $week_show += $bias;
+	if(date("w")=="1")
+	{		
+		$last_monday = strtotime("today");
+		if(isset($_GET['num'])){
+			$bias = htmlspecialchars($_GET['num']);
+			$week_show += $bias;
 
-        if ($bias==1)
-            $last_monday = strtotime("Next Monday");
-        elseif($bias<0){
-            $temp_bias = $bias-1;
-            $last_monday = strtotime($temp_bias." Monday");
-        }
-        elseif($bias!=0)
-            $last_monday = strtotime($bias." Monday");        
+			if ($bias==1)
+				$last_monday = strtotime("Next Monday");
+			elseif($bias!=0)
+				$last_monday = strtotime($bias." Monday"); 
+		}	
+	}
+	else
+	{
+		$last_monday = strtotime("last Monday");
+		if(isset($_GET['num'])){
+			$bias = htmlspecialchars($_GET['num']);
+			$week_show += $bias;
+
+			if ($bias==1)
+				$last_monday = strtotime("Next Monday");
+			elseif($bias<0){
+				$temp_bias = $bias-1;
+				$last_monday = strtotime($temp_bias." Monday");
+			}
+			elseif($bias!=0)
+				$last_monday = strtotime($bias." Monday"); 
+		}			
     }
 ?>
 

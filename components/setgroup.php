@@ -1,6 +1,6 @@
 <?php 
 if(($groups = $mysqli->query( "SELECT groups_original.`ID` as 'id_grup', timetable.`class` as 'name' FROM timetable LEFT JOIN groups_original ON timetable.`class` = groups_original.`Naimenovanie`  WHERE (date>DATE_ADD(now(), INTERVAL -31 DAY)) GROUP BY timetable.`class` ORDER BY timetable.`class`"))
-&& ($prepods = $mysqli->query( "SELECT prepodavatel_original.`ID` as 'id_prepod', timetable.`teacher` as 'name' FROM timetable LEFT JOIN prepodavatel_original ON timetable.`teacher` = prepodavatel_original.`FIO`  WHERE ((date>DATE_ADD(now(), INTERVAL -31 DAY)) AND (prepodavatel_original.`ID` != 38)) GROUP BY timetable.`teacher` ORDER BY timetable.`teacher`")))
+&& ($prepods = $mysqli->query( "SELECT prepodavatel_original.`ID` as 'id_prepod', timetable.`teacher` as 'name' FROM timetable LEFT JOIN prepodavatel_original ON timetable.`teacher` = prepodavatel_original.`Full_FIO`  WHERE ((date>DATE_ADD(now(), INTERVAL -31 DAY)) AND (prepodavatel_original.`ID` != 38)) GROUP BY timetable.`teacher` ORDER BY timetable.`teacher`")))
 { ?>
 	<table width=100%>
 		<tr>

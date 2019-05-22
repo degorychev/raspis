@@ -23,7 +23,7 @@ if ($next1){
     $disc = htmlspecialchars($_GET['disc']);
 else 
     $disc = "Дисциплина";
-    if($groups = $mysqli->query("SELECT `discipline` as 'name' from timetable where (`class` = '$gruppa' and  date > '2018-02-01') group by `discipline` ")){
+    if($groups = $mysqli->query("SELECT `discipline` as 'name' from timetable where (`class` = '$gruppa' and  date > '".date("Y-m-d", $start_grup)."') group by `discipline` ")){
 ?>
 <div class="btn-group">
     <button  type="button" class="btn btn-lg btn-default dropdown-toggle" data-toggle="dropdown"><?php echo $disc; ?> <span class="caret"></span></button>
