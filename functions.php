@@ -477,6 +477,23 @@ function get_teachername($id_prepod){
 	return $teacher_name;
 }
 
+function get_teachername_abbreviated($fullname_teacher)
+{
+	$output = str_replace('.','',$fullname_teacher);
+	$pieces = explode(" ", $output);
+	$output = $pieces[0];
+
+	$index = 1;
+	$elements = count ($pieces);
+	if($elements>1)
+		while ($index < $elements) {
+			$output = $output." ".mb_substr($pieces[$index], 0, 1).".";
+			$index++;
+		}
+	return $output;
+}
+
+
 $monthes = array(
 	1 => 'Января', 2 => 'Февраля', 3 => 'Марта', 4 => 'Апреля',
 	5 => 'Мая', 6 => 'Июня', 7 => 'Июля', 8 => 'Августа',

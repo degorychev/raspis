@@ -10,7 +10,7 @@
 		}
 		elseif ($_COOKIE['pos'] == 2){
 			$name_group = get_teachername($_COOKIE['id']);//Костыли и велосипеды, надо выпиливать
-			$title = "| ".$name_group;
+			$title = "| ".get_teachername_abbreviated($name_group);
 		}
 		else{
 			$name_group = "";
