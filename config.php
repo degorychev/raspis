@@ -16,7 +16,7 @@
 	if ($mysqli->connect_errno) {
 		printf("Соединение не удалось");
 		exit();
-	}
+	}	
 	
 	
 	$datefortimestamp = new DateTime("2019-02-03");

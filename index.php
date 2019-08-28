@@ -29,7 +29,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<?php echo '<title>Расписание '.$title.'</title>'; ?>
 		<link href="/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
-		<!-- Bootstrap -->
+		<meta name="theme-color" content="#4B5359">
+
+<!-- Bootstrap -->
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<link href="css/bootstrap-theme.min.css" rel="stylesheet">
 

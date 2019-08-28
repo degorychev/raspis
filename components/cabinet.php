@@ -6,7 +6,7 @@ if ($next1)
     $gruppa = htmlspecialchars($_GET['cab']);
 else 
     $gruppa = "Кабинет";
-if($groups = $mysqli->query( "SELECT auditorii_original.`ID` as 'id_cab', timetable.`cabinet` as 'name' FROM timetable LEFT JOIN auditorii_original ON timetable.`cabinet` = auditorii_original.`auditoria` WHERE (date>DATE_ADD(now(), INTERVAL -31 DAY)) AND timetable.`cabinet` != '0' GROUP BY timetable.`cabinet` ORDER BY timetable.`cabinet`")){
+if($groups = $mysqli->query( "SELECT auditorii_original.`ID` as 'id_cab', timetable.`cabinet` as 'name' FROM timetable LEFT JOIN auditorii_original ON timetable.`cabinet` = auditorii_original.`auditoria` WHERE (date>DATE_ADD(now(), INTERVAL -31 DAY)) AND timetable.`cabinet` != '0' GROUP BY timetable.`cabinet`, auditorii_original.`ID` ORDER BY timetable.`cabinet`")){
 
 $day_calc =0;
 if(isset($_GET['day'])){

@@ -6,7 +6,7 @@ if ($next1)
     $gruppa = htmlspecialchars($_GET['grup']);
 else 
     $gruppa = "Группа";
-if($groups = $mysqli->query( "SELECT groups_original.`ID` as 'id_grup', timetable.`class` as 'name' FROM timetable LEFT JOIN groups_original ON timetable.`class` = groups_original.`Naimenovanie`  WHERE (date>DATE_ADD(now(), INTERVAL -31 DAY)) GROUP BY timetable.`class` ORDER BY timetable.`class`")){
+if($groups = $mysqli->query( "SELECT groups_original.`ID` as 'id_grup', timetable.`class` as 'name' FROM timetable LEFT JOIN groups_original ON timetable.`class` = groups_original.`Naimenovanie` WHERE (date>DATE_ADD(now(), INTERVAL -31 DAY)) GROUP BY timetable.`class`, groups_original.`ID` ORDER BY timetable.`class`")){
 ?>
 <div align="center" style="margin-bottom: 20px;">
 <div class="btn-group">
