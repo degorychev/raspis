@@ -311,6 +311,9 @@ function get_shedule($name_grup, $den){
 				$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['teacher']);
 				$nachalo=strtotime($result['timeStart']."+3 HOUR");//Почему БЫЛО +1 час?
 				$konec=strtotime($result['timeStop']."+3 HOUR");
+				$subgr = 'Все';
+				if($result['subgroup'] != 0)
+					$subgr = $result['subgroup'].' п/г';
 				
 				$conclusion ='';
 				$warn_color = '';
@@ -323,8 +326,8 @@ function get_shedule($name_grup, $den){
                 $list_par[$num_par] = '
                 	<tr class="para_num_'.$num_par.' bright bleft">
 					<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><br>'.gmdate("H:i", $nachalo).'<br>'.gmdate("H:i", $konec).'</td>
-					<td colspan="2" class="'.$warn_color.'">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$conclusion.'</td></tr>
-					<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$prepod.'</td></tr>';
+					<td colspan="3" class="'.$warn_color.'">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$conclusion.'</td></tr>
+					<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$prepod.'</td>   <td>'.$subgr.'</td>   </tr>';
 			}
 			$rez->free();
 			return $list_par;
@@ -345,13 +348,14 @@ function get_table($name_grup, $den)
 								<th class="text-center">время</th>
 								<th class="text-center">ауд.</th>
 								<th class="text-center">Преподаватель</th>
+								<th class="text-center">Подгруппа</th>
 							</tr>
 						</thead>
 						<tbody class="text-center">';
 			if(count($PARI) == 0){
 				$print = $print.'
 							<tr class="bbottom bright bleft">
-								<td colspan="3">
+								<td colspan="4">
 									<h2 class="text-center">Пар нет!</h2>
 								</td>
 							</tr>';
