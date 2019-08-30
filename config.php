@@ -19,6 +19,6 @@
 	}	
 	
 	
-	$datefortimestamp = new DateTime("2019-02-03");
+	$datefortimestamp = new DateTime("2019-08-19");
     $start_grup = $datefortimestamp->getTimestamp();
 ?>

@@ -282,7 +282,19 @@ function get_cabinet_table($cab, $date){
 
 function get_shedule($name_grup, $den){
 	require("config.php");
-	if($rez = $mysqli->query("SELECT * FROM timetable WHERE class = '$name_grup' AND `date`='$den' ORDER BY `timeStart` ASC")){
+
+	$week = (int)((date('z',(strtotime('+'.$den)+60*60*3)) - date('z',$start_grup))/7)+1;
+	if($week%2!=0)
+		$week_parity = 0;
+	else
+		$week_parity = 1;
+	$weekday = date('w', (strtotime('+'.$den)))-1;
+	
+	//echo 'Пришло: '.$den;
+	//echo 'неделя: '.$week;
+	//echo 'Четность: '.$week_parity;
+	//echo 'День: '.$weekday;
+	if($rez = $mysqli->query("SELECT * FROM timetable WHERE `group` = '$name_grup' AND `day`='$weekday' AND `week`='$week_parity;' ORDER BY `timeStart` ASC")){
 		if(($rez->num_rows)>0){
 			$num_par = 0;
 			while($result = $rez->fetch_assoc()){
@@ -297,8 +309,8 @@ function get_shedule($name_grup, $den){
 
 				$num_par++;
 				$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['teacher']);
-				$nachalo=strtotime($result['timeStart']."+3 HOUR");//Почему БЫЛО +1 час?
-				$konec=strtotime($result['timeStop']."+3 HOUR");
+				$nachalo=strtotime($result['timeStart']."+2 HOUR");//Почему БЫЛО +1 час?
+				$konec=strtotime($result['timeStop']."+2 HOUR");
 				
 				$conclusion ='';
 				$warn_color = '';

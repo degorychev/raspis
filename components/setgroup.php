@@ -1,6 +1,6 @@
 <?php 
-if(($groups = $mysqli->query( "SELECT groups_original.`ID` as 'id_grup', timetable.`class` as 'name' FROM timetable LEFT JOIN groups_original ON timetable.`class` = groups_original.`Naimenovanie`  WHERE (date>DATE_ADD(now(), INTERVAL -331 DAY)) GROUP BY timetable.`class`, groups_original.`ID` ORDER BY timetable.`class`"))
-&& ($prepods = $mysqli->query( "SELECT prepodavatel_original.`ID` as 'id_prepod', timetable.`teacher` as 'name' FROM timetable LEFT JOIN prepodavatel_original ON timetable.`teacher` = prepodavatel_original.`Full_FIO`  WHERE ((date>DATE_ADD(now(), INTERVAL -31 DAY)) AND (prepodavatel_original.`ID` != 38)) GROUP BY timetable.`teacher`, prepodavatel_original.`ID`  ORDER BY timetable.`teacher`")))
+if(($groups = $mysqli->query( "SELECT timetable.`group` as 'name' FROM timetable GROUP BY timetable.`group` ORDER BY timetable.`group`"))
+&& ($prepods = $mysqli->query( "SELECT timetable.`teacher` AS 'name' FROM timetable WHERE CHAR_LENGTH(timetable.`teacher`) > 2 GROUP BY timetable.`teacher` ORDER BY timetable.`teacher`")))
 { ?>
 	<table width=100%>
 		<tr>
@@ -11,7 +11,7 @@ if(($groups = $mysqli->query( "SELECT groups_original.`ID` as 'id_grup', timetab
 					<div class="btn-group">
 						<button style="width: 180px;" type="button" class="btn btn-lg btn-default dropdown-toggle" data-toggle="dropdown">Группа <span class="caret"></span></button>
 						<ul style="min-width: 100px; width: 180px; text-align: center;" class="dropdown-menu" role="menu">
-							<?php while($result = $groups->fetch_assoc()){ echo '<li><a style="white-space: normal; word-wrap: break-word;" href="?id='.$result['id_grup'].'&pos=1">'.$result['name'].'</a></li>'; } ?>
+							<?php while($result = $groups->fetch_assoc()){ echo '<li><a style="white-space: normal; word-wrap: break-word;" href="?id='.$result['name'].'&pos=1">'.$result['name'].'</a></li>'; } ?>
 						</ul>
 					</div>
 					<div class="btn-group">

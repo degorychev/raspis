@@ -5,11 +5,13 @@
 	
 	if(isset($_COOKIE['id']) && isset($_COOKIE['pos'])){
 		if ($_COOKIE['pos'] == 1){
-			$name_group = get_groupname($_COOKIE['id']);
+			//$name_group = get_groupname($_COOKIE['id']);
+			$name_group = $_COOKIE['id'];
 			$title = "| ".$name_group;
 		}
 		elseif ($_COOKIE['pos'] == 2){
-			$name_group = get_teachername($_COOKIE['id']);//Костыли и велосипеды, надо выпиливать
+			//$name_group = get_teachername($_COOKIE['id']);//Костыли и велосипеды, надо выпиливать
+			$name_group = $_COOKIE['id'];
 			$title = "| ".get_teachername_abbreviated($name_group);
 		}
 		else{
