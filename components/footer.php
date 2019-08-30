@@ -1,7 +1,7 @@
 <nav class="navbar navbar-default">
     <div class="container">
         <div class="navbar-header">
-            <span class="navbar-brand">ИАТУ-расписание</span>
+            <span class="navbar-brand">УлГТУ-расписание</span>
         </div>
 
         <ul class="list-inline navbar-text navbar-right">

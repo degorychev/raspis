@@ -20,7 +20,7 @@
 		}
 	}else{
 		$name_group = "";
-		$title = "ИАТУ";
+		$title = "УлГТУ";
 	}
 ?>
 <!DOCTYPE html>

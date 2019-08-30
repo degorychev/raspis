@@ -309,8 +309,8 @@ function get_shedule($name_grup, $den){
 
 				$num_par++;
 				$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['teacher']);
-				$nachalo=strtotime($result['timeStart']."+2 HOUR");//Почему БЫЛО +1 час?
-				$konec=strtotime($result['timeStop']."+2 HOUR");
+				$nachalo=strtotime($result['timeStart']."+3 HOUR");//Почему БЫЛО +1 час?
+				$konec=strtotime($result['timeStop']."+3 HOUR");
 				
 				$conclusion ='';
 				$warn_color = '';
