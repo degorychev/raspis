@@ -372,7 +372,15 @@ function get_table($name_grup, $den)
 
 function get_shedule_teacher($name_teacher, $den){
 	require("config.php");
-	if($rez = $mysqli->query("SELECT * FROM timetable WHERE teacher = '$name_teacher' AND `date`='$den' ORDER BY `timeStart` ASC")){
+	
+	$week = (int)((date('z',(strtotime('+'.$den)+60*60*3)) - date('z',$start_grup))/7)+1;
+	if($week%2!=0)
+		$week_parity = 0;
+	else
+		$week_parity = 1;
+	$weekday = date('w', (strtotime('+'.$den)))-1;
+	
+	if($rez = $mysqli->query("SELECT * FROM timetable WHERE `teacher` = '$name_teacher' AND `day`='$weekday' AND `week`='$week_parity;' ORDER BY `timeStart` ASC")){
 		if(($rez->num_rows)>0){
 			$num_par = 0;
 			while($result = $rez->fetch_assoc()){
@@ -385,9 +393,13 @@ function get_shedule_teacher($name_teacher, $den){
 					(validity4($result['date'], $result['timeStart'], $result['teacher'], $result['cabinet'])));
 				}
 				$num_par++;
-				$group = str_replace('<span' ,'<span data-toggle="tooltip"', $result['class']);
+				$group = str_replace('<span' ,'<span data-toggle="tooltip"', $result['group']);
 				$nachalo=strtotime($result['timeStart']."+3 HOUR");
 				$konec=strtotime($result['timeStop']."+3 HOUR");
+				
+				$subgr = 'Все';
+				if($result['subgroup'] != 0)
+					$subgr = $result['subgroup'].' п/г';
 				
 				$conclusion ='';
 				$warn_color = '';
@@ -400,7 +412,7 @@ function get_shedule_teacher($name_teacher, $den){
                 	<tr class="para_num_'.$num_par.' bright bleft">
 					<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><br>'.gmdate("H:i", $nachalo).'<br>'.gmdate("H:i", $konec).'</td>
 					<td colspan="2" class="'.$warn_color.'">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$conclusion.'</td></tr>
-					<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$group.'</td></tr>';
+					<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$group.' ('.$subgr.')</td></tr>';
 			}
 			$rez->free();
 			return $list_par;

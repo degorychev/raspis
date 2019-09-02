@@ -17,7 +17,7 @@ if(($groups = $mysqli->query( "SELECT timetable.`group` as 'name' FROM timetable
 					<div class="btn-group">
 						<button style="width: 180px;" type="button" class="btn btn-lg btn-default dropdown-toggle" data-toggle="dropdown">Преподаватель <span class="caret"></span></button>
 						<ul style="min-width: 100px; width: 180px; text-align: center;" class="dropdown-menu" role="menu">
-							<?php while($result = $prepods->fetch_assoc()){ echo '<li><a style="white-space: normal; word-wrap: break-word;" href="?id='.$result['id_prepod'].'&pos=2">'.$result['name'].'</a></li>'; } ?>
+							<?php while($result = $prepods->fetch_assoc()){ echo '<li><a style="white-space: normal; word-wrap: break-word;" href="?id='.$result['name'].'&pos=2">'.$result['name'].'</a></li>'; } ?>
 						</ul>
 					</div>
 				</div>
