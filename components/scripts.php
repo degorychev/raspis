@@ -63,3 +63,9 @@
 				}, 1000);
 			}
 		</script>
+		<script>
+		$(function(){
+    // инициализации подсказок для всех элементов на странице, имеющих атрибут data-toggle="tooltip"
+    $('[data-toggle="tooltip"]').tooltip();    
+});
+</script>

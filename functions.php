@@ -280,6 +280,25 @@ function get_cabinet_table($cab, $date){
 	return $output;
 }
 
+function get_streaming($day, $week, $cabinet, $timestart, $group)
+{
+	//echo "-----".'<br>';
+	//echo "SELECT `group` FROM timetable WHERE `day`='$day' AND `week`='$week' AND `cabinet` LIKE '$cabinet' AND `timeStart`='$timestart' AND `group` NOT LIKE '$group' ORDER BY `group` ASC";
+	//echo '<br>'."-----".'<br>';
+	require("config.php");
+	$conclusion = '';
+	if($rez = $mysqli->query("SELECT `group` FROM timetable WHERE `day`='$day' AND `week`='$week' AND `cabinet` LIKE '$cabinet' AND `timeStart`='$timestart' AND `group` NOT LIKE '$group' ORDER BY `group` ASC")){
+		if(($rez->num_rows)>0){
+			$conclusion = '<span data-toggle="tooltip" class="label label-info"  title="';
+			while($result = $rez->fetch_assoc()){
+				$conclusion = $conclusion.$result['group'].' ';
+			}
+			$conclusion = $conclusion.'">'.'Поток'.'</span>';
+		}
+	}
+	return $conclusion;
+}
+
 function get_shedule($name_grup, $den){
 	require("config.php");
 
@@ -294,7 +313,7 @@ function get_shedule($name_grup, $den){
 	//echo 'неделя: '.$week;
 	//echo 'Четность: '.$week_parity;
 	//echo 'День: '.$weekday;
-	if($rez = $mysqli->query("SELECT * FROM timetable WHERE `group` = '$name_grup' AND `day`='$weekday' AND `week`='$week_parity;' ORDER BY `timeStart` ASC")){
+	if($rez = $mysqli->query("SELECT * FROM timetable WHERE `group` = '$name_grup' AND `day`='$weekday' AND `week`='$week_parity' ORDER BY `timeStart` ASC")){
 		if(($rez->num_rows)>0){
 			$num_par = 0;
 			while($result = $rez->fetch_assoc()){
@@ -312,6 +331,8 @@ function get_shedule($name_grup, $den){
 				$nachalo=strtotime($result['timeStart']."+3 HOUR");//Почему БЫЛО +1 час?
 				$konec=strtotime($result['timeStop']."+3 HOUR");
 				$subgr = 'Все';
+				$streaming_lecture = get_streaming($weekday, $week_parity, $result['cabinet'], $result['timeStart'], $name_grup);
+				
 				if($result['subgroup'] != 0)
 					$subgr = $result['subgroup'].' п/г';
 				
@@ -326,7 +347,7 @@ function get_shedule($name_grup, $den){
                 $list_par[$num_par] = '
                 	<tr class="para_num_'.$num_par.' bright bleft">
 					<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><br>'.gmdate("H:i", $nachalo).'<br>'.gmdate("H:i", $konec).'</td>
-					<td colspan="3" class="'.$warn_color.'">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$conclusion.'</td></tr>
+					<td colspan="3" class="'.$warn_color.'">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$streaming_lecture.' '.$conclusion.'</td></tr>
 					<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$prepod.'</td>   <td>'.$subgr.'</td>   </tr>';
 			}
 			$rez->free();
