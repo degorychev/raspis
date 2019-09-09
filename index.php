@@ -3,15 +3,15 @@
 	require("functions.php");
 	require('components/setcookie.php');
 	
-	if(isset($_COOKIE['id']) && isset($_COOKIE['pos'])){
-		if ($_COOKIE['pos'] == 1){
+	if(isset($_COOKIE['id_ulstu']) && isset($_COOKIE['pos_ulstu'])){
+		if ($_COOKIE['pos_ulstu'] == 1){
 			//$name_group = get_groupname($_COOKIE['id']);
-			$name_group = $_COOKIE['id'];
+			$name_group = $_COOKIE['id_ulstu'];
 			$title = "| ".$name_group;
 		}
-		elseif ($_COOKIE['pos'] == 2){
+		elseif ($_COOKIE['pos_ulstu'] == 2){
 			//$name_group = get_teachername($_COOKIE['id']);//Костыли и велосипеды, надо выпиливать
-			$name_group = $_COOKIE['id'];
+			$name_group = $_COOKIE['id_ulstu'];
 			$title = "| ".get_teachername_abbreviated($name_group);
 		}
 		else{
@@ -75,7 +75,7 @@
 				}else if($_GET['page'] == 'сabinet_schedule'){
 					include('components/cabinet.php');					
 				}else{
-					if(!isset($_COOKIE['id']) or (!isset($_COOKIE['pos'])) or (isset($_GET['p']))) //Выбор группы
+					if(!isset($_COOKIE['id_ulstu']) or (!isset($_COOKIE['pos_ulstu'])) or (isset($_GET['p']))) //Выбор группы
 					{
 						include('components/setgroup.php');
 					}else{
