@@ -64,9 +64,9 @@
                 <h3 class="panel-title"><?=day_of_week(date("N", $normdata))." (".date('d ', $normdata).$monthes[(date('n', $normdata))],")" ?></h3>
 			</div>
             <?php 
-            if ($_COOKIE['pos'] == 1){
+            if ($_COOKIE['pos_ulstu'] == 1){
                 echo get_table($name_group, date_format($work_day, "Y-m-d")); 
-            }elseif($_COOKIE['pos'] == 2){
+            }elseif($_COOKIE['pos_ulstu'] == 2){
                 echo get_table_teacher($name_group, date_format($work_day, "Y-m-d"));
             }
             
