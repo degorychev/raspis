@@ -1,7 +1,7 @@
 <?php
     $week = (int)((date('z',(time()+60*60*3)) - date('z',$start_grup))/7)+1;
     $today = day_of_week(date('w',(time()+60*60*3)));
-    $totime = date('G:i:s',(time()+60*60*3));
+    $totime = date('G:i:s',(time()));
 ?>
 
 <div class="alert alert-info">
