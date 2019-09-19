@@ -297,8 +297,8 @@ function get_shedule($name_grup, $den){
 
 				$num_par++;
 				$prepod = str_replace('<span' ,'<span data-toggle="tooltip"', $result['teacher']);
-				$nachalo=strtotime($result['timeStart']."+3 HOUR");//Почему БЫЛО +1 час?
-				$konec=strtotime($result['timeStop']."+3 HOUR");
+				$nachalo=strtotime($result['timeStart']);//Почему БЫЛО +1 час?
+				$konec=strtotime($result['timeStop']);
 				
 				$conclusion ='';
 				$warn_color = '';
@@ -310,7 +310,7 @@ function get_shedule($name_grup, $den){
 
                 $list_par[$num_par] = '
                 	<tr class="para_num_'.$num_par.' bright bleft">
-					<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><br>'.gmdate("H:i", $nachalo).'<br>'.gmdate("H:i", $konec).'</td>
+					<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><br>'.date("H:i", $nachalo).'<br>'.date("H:i", $konec).'</td>
 					<td colspan="2" class="'.$warn_color.'">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$conclusion.'</td></tr>
 					<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$prepod.'</td></tr>';
 			}
@@ -370,8 +370,8 @@ function get_shedule_teacher($name_teacher, $den){
 				}
 				$num_par++;
 				$group = str_replace('<span' ,'<span data-toggle="tooltip"', $result['class']);
-				$nachalo=strtotime($result['timeStart']."+3 HOUR");
-				$konec=strtotime($result['timeStop']."+3 HOUR");
+				$nachalo=strtotime($result['timeStart']);
+				$konec=strtotime($result['timeStop']);
 				
 				$conclusion ='';
 				$warn_color = '';
@@ -382,7 +382,7 @@ function get_shedule_teacher($name_teacher, $den){
 				}
                 $list_par[$num_par] = '
                 	<tr class="para_num_'.$num_par.' bright bleft">
-					<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><br>'.gmdate("H:i", $nachalo).'<br>'.gmdate("H:i", $konec).'</td>
+					<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><br>'.date("H:i", $nachalo).'<br>'.date("H:i", $konec).'</td>
 					<td colspan="2" class="'.$warn_color.'">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$conclusion.'</td></tr>
 					<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$group.'</td></tr>';
 			}

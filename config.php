@@ -4,6 +4,9 @@
 	ini_set('display_errors', 0);
 	ini_set('display_startup_errors', 0);
 	
+	define('TIMEZONE', 'Europe/Samara');
+	date_default_timezone_set(TIMEZONE);
+
 	$cfg = array(
 	'db_host' 			=> '127.0.0.1', //Хост.
 	'db_name'			=> 'raspisanie', //Имя.
@@ -19,6 +22,6 @@
 	}	
 	
 	
-	$datefortimestamp = new DateTime("2019-02-03");
+	$datefortimestamp = new DateTime("2019-09-02");
     $start_grup = $datefortimestamp->getTimestamp();
 ?>
