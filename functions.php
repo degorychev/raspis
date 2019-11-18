@@ -151,7 +151,7 @@ function get_problem_table($den, $time, $prepod, $cabinet){
 
 function get_TimeOnSite(){
 	$context  = stream_context_create(array('http' => array('header' => 'Accept: application/xml')));
-	$url = 'http://xn--80ap5ae.xn--p1ai/category/%D1%80%D0%B0%D1%81%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5/feed/';
+	$url = 'http://iatu.ulstu.ru/category/%D1%80%D0%B0%D1%81%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5/feed/';
 
 	$xml = file_get_contents($url, false, $context);
 	$xml = simplexml_load_string($xml);
