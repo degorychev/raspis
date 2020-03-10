@@ -157,7 +157,6 @@ function get_TimeOnSite(){
 	$xml = simplexml_load_string($xml);
 
 	$mydate = $xml->channel->lastBuildDate;
-
 	$timeonsite = strtotime($mydate);
 	return $timeonsite;
 }
@@ -282,7 +281,7 @@ function get_cabinet_table($cab, $date){
 
 function get_shedule($name_grup, $den){
 	require("config.php");
-	if($rez = $mysqli->query("SELECT * FROM timetable WHERE class = '$name_grup' AND `date`='$den' ORDER BY `timeStart` ASC")){
+	if($rez = $mysqli->query("SELECT * FROM timetable WHERE class = '$name_grup' AND `date`='$den' ORDER BY `timeStart` ASC, `subgroup` ASC")){
 		if(($rez->num_rows)>0){
 			$num_par = 0;
 			while($result = $rez->fetch_assoc()){
@@ -311,7 +310,7 @@ function get_shedule($name_grup, $den){
                 $list_par[$num_par] = '
                 	<tr class="para_num_'.$num_par.' bright bleft">
 					<td class="time_para" rowspan="2" style="border-bottom: 2px solid #000000;"><br>'.date("H:i", $nachalo).'<br>'.date("H:i", $konec).'</td>
-					<td colspan="2" class="'.$warn_color.'">'.$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$conclusion.'</td></tr>
+					<td colspan="2" class="'.$warn_color.'">'.getStringSubGroup($result['subgroup']).$result['discipline'].' <span class="label label-default">'.$result['type'].'</span> '.$conclusion.'</td></tr>
 					<tr class="para_num_'.$num_par.' bbottom bright"><td style="word-wrap: break-word;">'.$result['cabinet'].'</td><td>'.$prepod.'</td></tr>';
 			}
 			$rez->free();
@@ -322,6 +321,14 @@ function get_shedule($name_grup, $den){
 		$rez->free();
 		return false;
 	}
+}
+
+function getStringSubGroup($subgr)
+{
+if($subgr == '0')
+    return '[все] ';
+else
+    return '['.$subgr.' подгруппа] ';
 }
 
 function get_table($name_grup, $den)
