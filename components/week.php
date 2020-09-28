@@ -30,6 +30,14 @@
 				$last_monday = strtotime($bias." Monday"); 
 		}			
     }
+	
+	$weekviewstring = '<div class="col-md-4 col-xs-4"> <li><a href="?weekview=1">Сделать этот вид по умолчанию</a></li></div>';
+	if(isset($_COOKIE['weekview'])){
+		if ($_COOKIE['weekview'] == 1)
+		{
+			$weekviewstring = '<div class="col-md-4 col-xs-4"> <li><a href="?weekview=0">Убрать этот вид по умолчанию</a></li></div>';
+		}
+	}
 ?>
 
 <div class="panel panel-info text-center">
@@ -39,8 +47,9 @@
 </div>
 
 <ul class="pager">
-    <li class="previous"><a href="?page=all-par&num=<?=$bias-1?>">&larr; Предыдущая</a></li>
-	<li class="next"><a href="?page=all-par&num=<?=$bias+1?>">Следующая &rarr;</a></li>
+    <div class="col-md-4 col-xs-4"> <li class="previous"><a href="?page=all-par&num=<?=$bias-1?>">&larr; Предыдущая</a></li></div>
+    <?=$weekviewstring?>
+	<div class="col-md-4 col-xs-4"> <li class="next"><a href="?page=all-par&num=<?=$bias+1?>">Следующая &rarr;</a></li></div>
 </ul>
 <div class="row">
 
