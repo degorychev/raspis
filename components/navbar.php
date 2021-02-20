@@ -17,6 +17,7 @@
             <li><a href="?page=journal">Журнал</a></li>
             <li><a href="?page=сabinet_schedule">Расписание кабинета</a></li>
             <li><a href="?page=discord_table">Посещаемость</a></li>
+            <li><a href="?page=statement">Ведомость</a></li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right">

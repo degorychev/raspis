@@ -2,6 +2,7 @@
 	require("config.php");
 	require("functions.php");
 	require('components/setcookie.php');
+	require('components/setcookieweek.php');
 	
 	if(isset($_COOKIE['id']) && isset($_COOKIE['pos'])){
 		if ($_COOKIE['pos'] == 1){
@@ -64,8 +65,19 @@
 			<?php include('components/navbar.php'); ?>
 			<div style="margin-top: 70px;" class="container">
 				<?php
-				if($_GET['page'] == 'problem'){
+				$fastweek = false;
+				if(isset($_COOKIE['weekview'])){
+					if($_COOKIE['weekview'] == 1)
+						$fastweek = true;
+				}
+				if($_GET['page'] == 'discord_otchet'){
+					include('components/discord_otchet.php');
+				}else if($_GET['page'] == 'statement'){
+					include('components/statement.php');
+				}else if($_GET['page'] == 'problem'){
 					include('components/problem.php');
+				}else if($_GET['page'] == 'discord_table'){
+					include('components/discord_table.php');
 				}else if($_GET['page'] == 'problem_finder'){
 					include('components/problem_finder.php');
 				}else if($_GET['page'] == 'journal'){
@@ -78,7 +90,7 @@
 						include('components/setgroup.php');
 					}else{
 						include('components/infobar.php');
-						if($_GET['page'] == 'all-par'){
+						if(($_GET['page'] == 'all-par') or $fastweek){
 							include('components/week.php');
 						}else{
 							include('components/oneday.php');

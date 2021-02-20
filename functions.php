@@ -173,8 +173,76 @@ function get_last_update(){
 	return 'Ошибка';
 }
 
+function get_statement_table($prepod, $date_start, $date_stop){
+	//echo 'Начало классной функции <br>';
+	//echo "CALL `vedomost`('".$prepod."', '".date("Y-m-d", $date_start)."', '".date("Y-m-d", $date_stop)."')";
+	require("config.php");
+	
+	$rez = $mysqli->query("CALL `vedomost`('".$prepod."', '".date("Y-m-d", $date_start)."', '".date("Y-m-d", $date_stop)."')");
+	$output = '';
+	$output = $output.'<div class="table-responsive">';
+	$output = $output.'<table class="table table-bordered table-condensed">';
+	$output = $output.'<thead>';
+	$output = $output.'<tr>';
+	$output = $output.'<th>#</th>';
+	$output = $output.'<th>Дата</th>';
+	$output = $output.'<th>Время</th>';
+	$output = $output.'<th>Дисциплина</th>';
+	$output = $output.'<th>Группа</th>';
+	$output = $output.'<th>Содержание занятий</th>';
+	$output = $output.'<th>Лекция</th>';
+	$output = $output.'<th>семинар и практ. занятия</th>';
+	$output = $output.'<th>Консультации</th>';
+	$output = $output.'<th>Курсовая работа</th>';
+	$output = $output.'<th>Экзамены</th>';
+	$output = $output.'</tr>';
+	$output = $output.'</thead>';
+	$output = $output.'<tbody>';
+	//$today = strtotime(date('Y-m-d'));
+	$schet = 0;
+	$flag = false;
+		while($data = mysqli_fetch_array($rez)){ 
+			//list($grupa, $kurs) = explode('-', $data['class']);
+			//$god = 2021-(int)($kurs{0});
+			//$prepod =  explode(" ", $data['teacher']);			
+			
+			//$discord_otchet='<a href="?page=discord_otchet&date='.$data['date'].'&timeStart='.$data['timeStart'].'&timeStop='.$data['timeStop'].'&teacher='.$data['teacher'].'&group='.$data['class'].'"><span style="color: blue;" class="glyphicon glyphicon-th-list" title="Отчет о посещаемости" aria-hidden="true"></span></a>';
+			//$discord_count = get_discord_count($data['date'], $data['timeStart'], $data['timeStop'], $grupa, $god, $prepod[0]);
+			
+			//if ($today <= strtotime($data['date'])){
+			//	$output = $output.'<tr class="bg-warning">';
+			//	if (!$flag){
+			//		$flag = true;
+			//		$schet = 0;
+			//	}
+			//}
+			//else
+				$output = $output.'<tr class="bg-success">';
+
+			$output = $output.'<td>' . ++$schet . '</td>';
+			$output = $output.'<td>' . date("d.m.Y", strtotime($data['oDate'])) . '</td>';
+			$output = $output.'<td> ' . date("H:i", strtotime($data['oTStart'])) . ' до '. date("H:i", strtotime($data['oTStop']))  .'</td>';
+			$output = $output.'<td>' . $data['oDiscipline'] . '</td>';
+			$output = $output.'<td>' . $data['oClass'] . '</td>';
+			$output = $output.'<td>' . $data['oType'] . '</td>';
+			$output = $output.'<td>' . $data['oCountLection'] . '</td>';
+			$output = $output.'<td>' . $data['oCountPract'] . '</td>';
+			$output = $output.'<td>' . $data['oCountConsult'] . '</td>';
+			$output = $output.'<td>' . $data['oCountKurs'] . '</td>';
+			$output = $output.'<td>' . $data['oCountExam'] . '</td>';
+			//if($data['cabinet'] == 'Discord')			
+			//	$output = $output.'<td>' . $discord_otchet. ' ('.$discord_count.' человек)' . '</td>';			
+			$output = $output.'</tr>';
+		}
+		
+	$output = $output.'</tbody>';
+	$output = $output.'</table></div>';
+	return $output;
+}
+
 function get_journal_table($group, $disc){
 	require("config.php");
+	
 	$rez = $mysqli->query('select * from timetable where (class = "'.$group.'" and discipline = "'.$disc.'" and  date > "'.date("Y-m-d", $start_grup).'") order by date');
 	$output = '';
 	$output = $output.'<div class="table-responsive">';
@@ -189,6 +257,7 @@ function get_journal_table($group, $disc){
 	$output = $output.'<th>Преподаватель</th>';
 	$output = $output.'<th>Кабинет</th>';
 	$output = $output.'<th>Подгруппа</th>';
+	$output = $output.'<th>Отчет</th>';
 	$output = $output.'</tr>';
 	$output = $output.'</thead>';
 	$output = $output.'<tbody>';
@@ -196,6 +265,13 @@ function get_journal_table($group, $disc){
 	$schet = 0;
 	$flag = false;
 		while($data = mysqli_fetch_array($rez)){ 
+			list($grupa, $kurs) = explode('-', $data['class']);
+			$god = 2021-(int)($kurs{0});
+			$prepod =  explode(" ", $data['teacher']);			
+			
+			$discord_otchet='<a href="?page=discord_otchet&date='.$data['date'].'&timeStart='.$data['timeStart'].'&timeStop='.$data['timeStop'].'&teacher='.$data['teacher'].'&group='.$data['class'].'"><span style="color: blue;" class="glyphicon glyphicon-th-list" title="Отчет о посещаемости" aria-hidden="true"></span></a>';
+			$discord_count = get_discord_count($data['date'], $data['timeStart'], $data['timeStop'], $grupa, $god, $prepod[0]);
+			
 			if ($today <= strtotime($data['date'])){
 				$output = $output.'<tr class="bg-warning">';
 				if (!$flag){
@@ -214,6 +290,8 @@ function get_journal_table($group, $disc){
 			$output = $output.'<td>' . $data['teacher'] . '</td>';
 			$output = $output.'<td>' . $data['cabinet'] . '</td>';
 			$output = $output.'<td>' . $data['subgroup'] . '</td>';
+			if($data['cabinet'] == 'Discord')			
+				$output = $output.'<td>' . $discord_otchet. ' ('.$discord_count.' человек)' . '</td>';			
 			$output = $output.'</tr>';
 		}
 		
@@ -239,7 +317,7 @@ function get_discord_journal_table($date, $timestart, $timestop,$grupa,$god, $pr
 			WHERE `role` = 'Преподаватели' 
 			AND IFNULL(nickname, username) NOT LIKE '%".$prepod."%' 
 			GROUP BY `user_id`)
-		ORDER BY `user`, `connect_time`";
+	ORDER BY `channel`, `user`, `connect_time`";
 	//echo "debug: ". $zapros;
 	$rez = $mysqli->query($zapros);
 	$output = '';
